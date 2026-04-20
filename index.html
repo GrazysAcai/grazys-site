@@ -649,7 +649,23 @@ function applyTranslations(){
 
 // ACAI
 function selSize(el,name,price,max,oz){document.querySelectorAll('.size-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');acaiSz={name:name,price:price,max:max,oz:oz};var sel=document.querySelectorAll('.chip.sel');if(sel.length>max)sel.forEach(function(c,i){if(i>=max)c.classList.remove('sel');});acaiTops=Array.from(document.querySelectorAll('.chip.sel')).map(function(c){return c.textContent.trim();});updBuilder();
-applyTranslations();}
+applyTranslations();
+
+// ── TABLE QR CODE DETECTION ──────────────────────────────
+var tableNumber = null;
+(function detectTable(){
+  var params = new URLSearchParams(window.location.search);
+  var t = params.get('table');
+  if (t) {
+    tableNumber = t;
+    // Show table banner
+    var banner = document.createElement('div');
+    banner.style.cssText = 'background:#5c2a0e;color:#fde68a;text-align:center;padding:10px;font-family:Paytone One,sans-serif;font-size:14px;position:sticky;top:52px;z-index:49;';
+    banner.innerHTML = '🍽️ Table ' + t + ' — We\'ll bring your order right to you! &nbsp;|&nbsp; 🫐 <b>+50 bonus points</b> for ordering here! &nbsp;|&nbsp; 💸 <b>5% off</b> your first scan order!';
+    document.querySelector('.nav-sticky').after(banner);
+  }
+})();
+}
 function selBase(el,base){document.querySelectorAll('.base-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');acaiBase=base;}
 function togTop(el,name){var sel=document.querySelectorAll('.chip.sel').length;if(!el.classList.contains('sel')&&sel>=acaiSz.max){el.style.animation='shake .3s';setTimeout(function(){el.style.animation='';},300);return;}el.classList.toggle('sel');acaiTops=Array.from(document.querySelectorAll('.chip.sel')).map(function(c){return c.textContent.trim();});updBuilder();}
 function updBuilder(){var s=document.querySelectorAll('.chip.sel').length;document.getElementById('selCnt').textContent=s;document.getElementById('maxCnt').textContent=acaiSz.max;document.getElementById('bPrice').textContent=acaiSz.price.toFixed(2);var sum=document.getElementById('bSum');if(s>0){sum.style.display='block';sum.innerHTML='<b>'+acaiSz.name+'</b> ('+acaiSz.oz+') — '+acaiBase+'<br>🍫 '+acaiTops.join(' · ');}else{sum.style.display='none';}}
@@ -752,7 +768,9 @@ async function showSuccess(orderId,phone,payMethod,amount){
   if(payMethod==='venmo')extra='<div style="background:#e8f4fd;border:1.5px solid #93c5fd;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#1d4ed8;font-weight:700;">💙 Send $'+amount.toFixed(2)+' to <b>@grazysacai</b> on Venmo<br>Note: <b>#'+orderId+'</b></div>';
   if(payMethod==='zelle')extra='<div style="background:#f3e8ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#6d28d9;font-weight:700;">💜 Send $'+amount.toFixed(2)+' to <b>(203) 726-4127</b> on Zelle<br>Note: <b>#'+orderId+'</b></div>';
   var ov=document.getElementById('overlay');
-  ov.innerHTML='<div style="background:white;border-radius:24px 24px 0 0;padding:40px 24px 48px;width:100%;max-width:580px;text-align:center;"><div style="font-size:56px;margin-bottom:12px">🎉</div><div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-bottom:8px">Order placed!</div><div style="font-size:14px;color:#b07050;margin-bottom:12px">We\'ll call <b>'+phone+'</b> to confirm. ETA: 30-45 min.</div>'+extra+'<div style="background:#fff9f4;border-radius:12px;padding:12px 16px;font-size:13px;color:#5c2a0e;font-weight:800;display:inline-block">Order #'+orderId+'</div><br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:24px;padding:12px 32px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer">Back to menu</button></div>';
+  var tableMsg = tableNumber ? '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#166534;font-weight:700">🍽️ Sit back! We\'re bringing it to Table '+tableNumber+'<br>⭐ +50 bonus points added!</div>' : '';
+  var orderMoreBtn = tableNumber ? '<br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:10px;padding:12px 32px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer">➕ Order More Items</button>' : '';
+  ov.innerHTML='<div style="background:white;border-radius:24px 24px 0 0;padding:40px 24px 48px;width:100%;max-width:580px;text-align:center;"><div style="font-size:56px;margin-bottom:12px">🎉</div><div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-bottom:8px">Order placed!</div><div style="font-size:14px;color:#b07050;margin-bottom:12px">'+(tableNumber?'Your food is coming to Table '+tableNumber+'!':'We\'ll call <b>'+phone+'</b> to confirm. ETA: 30-45 min.')+'</div>'+tableMsg+extra+'<div style="background:#fff9f4;border-radius:12px;padding:12px 16px;font-size:13px;color:#5c2a0e;font-weight:800;display:inline-block">Order #'+orderId+'</div><br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:24px;padding:12px 32px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer">Back to menu</button>'+orderMoreBtn+'</div>';
   ov.style.alignItems='flex-end';ov.classList.add('open');
 }
 function goSec(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');}
