@@ -699,7 +699,19 @@ function getDFee(){if(orderType!=='delivery'||!zone)return 0;return getSub()>=zo
 function getTotal(){return getSub()+getDFee();}
 function updBar(){var c=cart.reduce(function(s,i){return s+i.qty;},0);document.getElementById('cfCount').textContent=c;document.getElementById('cfTotal').textContent='$'+getTotal().toFixed(2);document.getElementById('cartFloat').classList.toggle('hidden',c===0);}
 function updZone(){var sel=document.getElementById('zoneSelect'),opt=sel.options[sel.selectedIndex];zone=sel.value?{fee:parseFloat(opt.getAttribute('data-fee')),free:parseFloat(opt.getAttribute('data-free'))}:null;renderCart();updBar();}
-function openCart(){renderCart();document.getElementById('overlay').classList.add('open');document.getElementById('overlay').onclick=function(e){if(e.target.id==='overlay')closeCart();};setTimeout(initStripe,100);}
+function openCart(){
+  renderCart();
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('overlay').onclick=function(e){if(e.target.id==='overlay')closeCart();};
+  setTimeout(initStripe,100);
+  // Hide delivery for table orders
+  if(tableNumber){
+    document.getElementById('btnDel').style.display='none';
+    document.getElementById('btnPick').textContent='🍽️ Dine In - Table '+tableNumber;
+    document.getElementById('addrWrap').style.display='none';
+    setType('pickup');
+  }
+}
 function closeCart(){document.getElementById('overlay').classList.remove('open');}
 function renderCart(){
   var b=document.getElementById('cartBody');
