@@ -938,10 +938,21 @@ async function loadNews() {
     var featured = data.posts.filter(function(p){return p.featured;});
     var regular = data.posts.filter(function(p){return !p.featured;});
     var html = '';
+
+    function buildMedia(p, large) {
+      if (p.image_url) return '<img src="'+p.image_url+'" style="width:100%;height:'+(large?'220':'140')+'px;object-fit:cover;"/>';
+      if (p.video_url) {
+        var yt = p.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+        if (yt) return '<iframe src="https://www.youtube.com/embed/'+yt[1]+'" style="width:100%;height:'+(large?'220':'140')+'px;border:none;" allowfullscreen></iframe>';
+        return '<div style="background:#f5ddd0;height:'+(large?'220':'140')+'px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#b07050;flex-direction:column;gap:8px;"><span style="font-size:32px">🎥</span><a href="'+p.video_url+'" target="_blank" style="color:var(--pink-dark);font-weight:700;">Watch Video</a></div>';
+      }
+      return '<div class="news-img">'+p.emoji+'</div>';
+    }
+
     featured.forEach(function(p){
       html += '<div class="news-card featured">' +
         '<div class="news-badge">🔥 Featured</div>' +
-        '<div class="news-img">'+p.emoji+'</div>' +
+        buildMedia(p, true) +
         '<div class="news-body">' +
           '<div class="news-date">'+p.date_label+'</div>' +
           '<div class="news-title">'+p.title+'</div>' +
@@ -952,7 +963,7 @@ async function loadNews() {
       html += '<div class="news-grid">';
       regular.forEach(function(p){
         html += '<div class="news-card">' +
-          '<div class="news-img">'+p.emoji+'</div>' +
+          buildMedia(p, false) +
           '<div class="news-body">' +
             '<div class="news-date">'+p.date_label+'</div>' +
             '<div class="news-title">'+p.title+'</div>' +
