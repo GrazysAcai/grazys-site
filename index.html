@@ -498,6 +498,12 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
         </select>
       </div>
       <label class="flabel" id="fnotesLbl">Notes (optional)</label><input class="finput" type="text" id="fnotes" placeholder="Allergies, extra sauce..."/>
+      <label class="flabel">Influencer Code (optional)</label>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input class="finput" type="text" id="influencerCode" placeholder="e.g. MARIA10" style="margin-bottom:0;text-transform:uppercase;letter-spacing:2px;font-weight:800;" oninput="applyInfluencerCode()"/>
+        <button onclick="applyInfluencerCode()" style="padding:0 16px;background:var(--brown);color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Apply</button>
+      </div>
+      <div id="influencerMsg" style="font-size:13px;font-weight:700;margin-bottom:12px;min-height:16px;"></div>
       <label class="flabel" id="payMethodLbl" style="margin-bottom:8px">Payment method</label>
       <div class="pay-toggle">
         <button class="pay-opt sel" id="pCard" onclick="setPayM('card')">💳 Card</button>
@@ -521,6 +527,33 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 
 <script>
 var BACKEND='https://grazys-backend-production.up.railway.app';
+
+// ── INFLUENCER CODES ─────────────────────────────────────
+var INFLUENCER_CODES = {
+  'MARIA10': { name: 'Maria Silva',    allowance: 2, used: 0, discount: 10, type: 'percent' },
+  'JOAO15':  { name: 'Joao Rodrigues', allowance: 5, used: 0, discount: 15, type: 'percent' },
+  'TEST':    { name: 'Test Account',   allowance: 2, used: 0, discount: 10, type: 'percent' }
+};
+var appliedInfluencerCode = null;
+
+function applyInfluencerCode() {
+  var code = document.getElementById('influencerCode').value.trim().toUpperCase();
+  var inf = INFLUENCER_CODES[code];
+  var msgEl = document.getElementById('influencerMsg');
+  if (!code) { msgEl.textContent=''; appliedInfluencerCode=null; renderCart(); return; }
+  if (!inf) {
+    msgEl.innerHTML='<span style="color:#c2185b">Invalid code. Try again!</span>';
+    appliedInfluencerCode=null; renderCart(); return;
+  }
+  if (inf.used >= inf.allowance) {
+    msgEl.innerHTML='<span style="color:#c2185b">All free items used this month! Resets on the 1st.</span>';
+    appliedInfluencerCode=null; renderCart(); return;
+  }
+  appliedInfluencerCode = {code:code,name:inf.name,allowance:inf.allowance,used:inf.used,discount:inf.discount,type:inf.type};
+  var remaining = inf.allowance - inf.used;
+  msgEl.innerHTML='<span style="color:#22c55e">Welcome '+inf.name+'! '+remaining+' free item(s) available! </span>';
+  renderCart();
+}
 var STRIPE_PK='pk_test_REPLACE_WITH_YOUR_STRIPE_KEY';
 var ZONES={bridgeport:{fee:2.99,free:25},fairfield:{fee:4.99,free:35},trumbull:{fee:4.99,free:35},shelton:{fee:6.99,free:45},monroe:{fee:6.99,free:45}};
 
@@ -760,7 +793,13 @@ function addWS(name,price,sub){cart.push({name:name,price:price,sub:sub,qty:1});
 function pulse(){var el=document.getElementById('cartFloat');el.style.background='#a0144d';setTimeout(function(){el.style.background='';},250);}
 function getSub(){return cart.reduce(function(s,i){return s+i.price*i.qty;},0);}
 function getDFee(){if(orderType!=='delivery'||!zone)return 0;return getSub()>=zone.free?0:zone.fee;}
-function getTotal(){return getSub()+getDFee();}
+function getInfluencerDiscount(){
+  if(!appliedInfluencerCode) return 0;
+  var sub=getSub();
+  if(appliedInfluencerCode.type==='percent') return parseFloat((sub*appliedInfluencerCode.discount/100).toFixed(2));
+  return Math.min(appliedInfluencerCode.discount,sub);
+}
+function getTotal(){return Math.max(0,getSub()+getDFee()-getInfluencerDiscount());}
 function updBar(){var c=cart.reduce(function(s,i){return s+i.qty;},0);document.getElementById('cfCount').textContent=c;document.getElementById('cfTotal').textContent='$'+getTotal().toFixed(2);document.getElementById('cartFloat').classList.toggle('hidden',c===0);}
 function updZone(){var sel=document.getElementById('zoneSelect'),opt=sel.options[sel.selectedIndex];zone=sel.value?{fee:parseFloat(opt.getAttribute('data-fee')),free:parseFloat(opt.getAttribute('data-free'))}:null;renderCart();updBar();}
 function openCart(){
@@ -784,14 +823,15 @@ function renderCart(){
   if(!cart.length){b.innerHTML='<div class="empty-cart"><span>🛒</span>Your cart is empty — add something delicious!</div>';document.getElementById('payAmt').textContent='$0.00';return;}
   var html='';
   cart.forEach(function(item,i){html+='<div class="ci"><div><div class="ci-name">'+item.name+'</div>'+(item.sub?'<div class="ci-sub">'+item.sub+'</div>':'')+'<div class="ci-price">$'+(item.price*item.qty).toFixed(2)+'</div></div><div class="ci-qty"><button class="qb" onclick="chg('+i+',-1)">−</button><span class="ci-num">'+item.qty+'</span><button class="qb" onclick="chg('+i+',1)">+</button></div></div>';});
-  var s=getSub(),f=getDFee(),t=getTotal();
+  var s=getSub(),f=getDFee(),disc=getInfluencerDiscount(),t=getTotal();
   var feeHtml='';
   if(orderType==='delivery'){
     if(!zone)feeHtml='<div class="sum-row"><span>Delivery fee</span><span style="color:#b07050">Select your city</span></div>';
     else if(f===0)feeHtml='<div class="sum-row"><span>Delivery fee</span><span class="free-tag">FREE 🎉</span></div>';
     else{var rem=(zone.free-s).toFixed(2);feeHtml='<div class="sum-row"><span>Delivery fee</span><span>$'+f.toFixed(2)+'</span></div>'+(rem>0?'<div class="sum-row"><span style="color:var(--green);font-size:11px">Add $'+rem+' more for free delivery!</span></div>':'');}
   }else{feeHtml='<div class="sum-row"><span>Pickup</span><span>No fee</span></div>';}
-  html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
+  var discHtml=disc>0?'<div class="sum-row"><span>Influencer discount</span><span style="color:var(--green)">-$'+disc.toFixed(2)+'</span></div>':'';
+  html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+discHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
   b.innerHTML=html;document.getElementById('payAmt').textContent='$'+t.toFixed(2);
 }
 function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updBar();renderCart();}
