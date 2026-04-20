@@ -168,6 +168,20 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 .pay-note{font-size:11px;color:#c0a090;text-align:center;margin-top:8px;}
 .empty-cart{text-align:center;padding:32px 0;color:#c0a090;font-size:14px;}
 .empty-cart span{font-size:40px;display:block;margin-bottom:8px;}
+
+/* NEWS & EVENTS */
+.news-card{background:white;border-radius:var(--r);border:1.5px solid #fce7d6;overflow:hidden;margin-bottom:14px;}
+.news-card.featured{border-color:var(--pink-dark);border-width:2px;}
+.news-badge{background:var(--pink-dark);color:white;font-size:11px;font-weight:800;padding:4px 12px;display:inline-block;}
+.news-img{height:100px;background:linear-gradient(135deg,#fde68a55,#fbb6ce55);display:flex;align-items:center;justify-content:center;font-size:52px;}
+.news-body{padding:14px 16px;}
+.news-date{font-size:11px;color:#b07050;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.news-title{font-size:16px;font-weight:900;color:var(--brown);margin-bottom:6px;}
+.news-text{font-size:13px;color:#b07050;line-height:1.5;margin-bottom:10px;}
+.news-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.news-tag{background:var(--cream);border:1px solid #fce7d6;border-radius:12px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--brown);}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+
 </style>
 </head>
 <body>
@@ -202,12 +216,13 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <div class="nav-sticky">
   <div class="nav-scroll">
     <button class="nav-pill active" onclick="goSec('acai',this)">🫐 Açaí</button>
-    <button class="nav-pill" onclick="goSec('bottles',this)">🍾 Bottle Collection</button>
+    <button class="nav-pill" onclick="goSec('bottles',this)">🥤 Smoothie Collection</button>
     <button class="nav-pill" onclick="goSec('burgers',this)">🍔 Burgers</button>
     <button class="nav-pill" onclick="goSec('hotdogs',this)">🌭 Hot Dogs Dock</button>
     <button class="nav-pill" onclick="goSec('prensados',this)">🥪 Prensados</button>
     <button class="nav-pill" onclick="goSec('sides',this)">🍟 Sides</button>
     <button class="nav-pill" onclick="goSec('drinks',this)">🥤 Drinks</button>
+    <button class="nav-pill" onclick="goSec('news',this)">📰 News & Events</button>
   </div>
 </div>
 <div class="menu-wrap">
@@ -277,7 +292,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 
 <!-- BOTTLE COLLECTION -->
 <div class="menu-section" id="bottles">
-  <div class="sec-title" id="bottlesSecTitle">🍾 Bottle Collection</div>
+  <div class="sec-title" id="bottlesSecTitle">🥤 Smoothie Collection</div>
   <div class="sec-sub" id="bottlesSecSub">Smoothies Trufados — Premium 16oz</div>
   <div class="cards-grid">
     <div class="card" onclick="add('Classic Gold Truffle',10)"><div class="card-img">🍫</div><div class="card-body"><div class="card-name">Classic Gold Truffle</div><div class="card-desc">Açaí trufado com Ninho e leite condensado</div><div class="card-foot"><span class="card-price">$10</span><button class="add-btn" onclick="event.stopPropagation();add('Classic Gold Truffle',10)">+</button></div></div></div>
@@ -359,6 +374,64 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
     <div class="card" onclick="add('Suco de Polpa',3)"><div class="card-img">🍹</div><div class="card-body"><div class="card-name" id="juiceName">Fruit Juice</div><div class="card-desc" id="juiceDesc">Natural fruit pulp juice</div><div class="card-foot"><span class="card-price">$3</span><button class="add-btn" onclick="event.stopPropagation();add('Suco de Polpa',3)">+</button></div></div></div>
   </div>
 </div>
+
+  <!-- NEWS & EVENTS -->
+  <div class="menu-section" id="news">
+    <div class="sec-title">📰 News & Events</div>
+    <div class="sec-sub" id="newsSubtitle">Latest from Grazy's Açaí 🐶</div>
+    <div id="newsFeed">
+      <!-- NEWS CARDS - Admin can add via Supabase -->
+      <div class="news-card featured">
+        <div class="news-badge">🔥 Featured</div>
+        <div class="news-img">📺</div>
+        <div class="news-body">
+          <div class="news-date">April 2026</div>
+          <div class="news-title">Grazy's Açaí Opens in Bridgeport!</div>
+          <div class="news-text">We're thrilled to bring the authentic taste of Brazilian açaí to Bridgeport, CT! Come visit us at 666 Brooklawn Ave and try our signature bowls, bottles and more!</div>
+          <div class="news-tags"><span class="news-tag">🎉 Grand Opening</span><span class="news-tag">📍 Bridgeport</span></div>
+        </div>
+      </div>
+      <div class="news-grid">
+        <div class="news-card">
+          <div class="news-img">🍾</div>
+          <div class="news-body">
+            <div class="news-date">April 2026</div>
+            <div class="news-title">New Smoothie Collection! 🥤</div>
+            <div class="news-text">12 new smoothies trufados — Classic Gold Truffle, Pistachio Premium and more!</div>
+            <div class="news-tags"><span class="news-tag">🆕 New Item</span></div>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-img">⭐</div>
+          <div class="news-body">
+            <div class="news-date">April 2026</div>
+            <div class="news-title">Loyalty Program Launched!</div>
+            <div class="news-text">Earn 10 points for every $1 spent! Redeem for free açaí, burgers and more!</div>
+            <div class="news-tags"><span class="news-tag">🏆 Loyalty</span></div>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-img">🛵</div>
+          <div class="news-body">
+            <div class="news-date">April 2026</div>
+            <div class="news-title">Now Delivering!</div>
+            <div class="news-text">We now deliver to Bridgeport, Fairfield, Trumbull, Shelton and Monroe!</div>
+            <div class="news-tags"><span class="news-tag">🛵 Delivery</span></div>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-img">📱</div>
+          <div class="news-body">
+            <div class="news-date">Coming Soon</div>
+            <div class="news-title">Grazy's App Coming Soon!</div>
+            <div class="news-text">Our mobile app for Android and iPhone is coming soon! Order, track points and get exclusive deals!</div>
+            <div class="news-tags"><span class="news-tag">📱 App</span><span class="news-tag">🔜 Soon</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- BURGER MODAL -->
@@ -488,7 +561,7 @@ var TRANSLATIONS = {
     // frutas EN
     "Morango":"🍓 Strawberry","Banana":"🍌 Banana","Kiwi":"🥝 Kiwi","Manga":"🥭 Mango","Blueberries":"🫐 Blueberries",
     // burgers
-    bottlesTitle:"🍾 Bottle Collection", bottlesSub:"Truffled Smoothies — Premium 16oz",
+    bottlesTitle:"🥤 Smoothie Collection", bottlesSub:"Truffled Smoothies — Premium 16oz",
     burgerTitle:"🍔 Burgers", burgerSub:"Extras: +$3 extra beef · +$2 bacon · +$1 banana · +$1 mozzarella",
     hotdogsTitle:"🌭 Hot Dogs Dock", hotdogsSub:"Individual or Combo (+fries +drink)",
     prensadosTitle:"🥪 Prensados Hot Dogs",
@@ -535,7 +608,7 @@ var TRANSLATIONS = {
     "Creme de Paçoca":"Creme de Paçoca","Creme de Morango":"Creme de Morango",
     "Creme de Avelã":"Creme de Avelã","Creme Trufado":"Creme Trufado","Creme de Ninho":"Creme de Ninho",
     "Morango":"🍓 Morango","Banana":"🍌 Banana","Kiwi":"🥝 Kiwi","Manga":"🥭 Manga","Blueberries":"🫐 Blueberries",
-    bottlesTitle:"🍾 Bottle Collection", bottlesSub:"Smoothies Trufados — Edição Premium 16oz",
+    bottlesTitle:"🥤 Smoothie Collection", bottlesSub:"Smoothies Trufados — Edição Premium 16oz",
     burgerTitle:"🍔 Burgers", burgerSub:"Extras: +$3 bife extra · +$2 bacon · +$1 banana · +$1 muçarela",
     hotdogsTitle:"🌭 Hot Dogs Dock", hotdogsSub:"Individual ou Combo (+batata +refrigerante)",
     prensadosTitle:"🥪 Hot Dogs Prensados",
@@ -580,7 +653,7 @@ function applyTranslations(){
   if(zf[2])zf[2].textContent=tr.freeOver45;
   // Nav pills
   var pills=document.querySelectorAll('.nav-pill');
-  var navKeys=['🫐 Açaí','🍾 Bottle Collection',tr.burgerTitle,'🌭 Hot Dogs Dock',tr.prensadosTitle,tr.sidesTitle,tr.drinksTitle];
+  var navKeys=['🫐 Açaí','🥤 Smoothie Collection',tr.burgerTitle,'🌭 Hot Dogs Dock',tr.prensadosTitle,tr.sidesTitle,tr.drinksTitle];
   pills.forEach(function(p,i){if(navKeys[i])p.textContent=navKeys[i];});
   // Section titles
   var st=document.getElementById('acaiSecTitle'); if(st)st.textContent=tr.acaiTitle;
