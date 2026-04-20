@@ -498,9 +498,9 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
         </select>
       </div>
       <label class="flabel" id="fnotesLbl">Notes (optional)</label><input class="finput" type="text" id="fnotes" placeholder="Allergies, extra sauce..."/>
-      <label class="flabel">Influencer Code (optional)</label>
+      <label class="flabel">Promo / Invite Code (optional)</label>
       <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <input class="finput" type="text" id="influencerCode" placeholder="e.g. MARIA10" style="margin-bottom:0;text-transform:uppercase;letter-spacing:2px;font-weight:800;" oninput="applyInfluencerCode()"/>
+        <input class="finput" type="text" id="influencerCode" placeholder="e.g. WELCOME or PLAT0001" style="margin-bottom:0;text-transform:uppercase;letter-spacing:2px;font-weight:800;" oninput="applyInfluencerCode()"/>
         <button onclick="applyInfluencerCode()" style="padding:0 16px;background:var(--brown);color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Apply</button>
       </div>
       <div id="influencerMsg" style="font-size:13px;font-weight:700;margin-bottom:12px;min-height:16px;"></div>
@@ -529,30 +529,46 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 var BACKEND='https://grazys-backend-production.up.railway.app';
 
 // ── INFLUENCER CODES ─────────────────────────────────────
+// PROMO CODES — regular discounts
+var PROMO_CODES = {
+  'ACAI3X':  { desc: 'Buy 2 Acai Get 1 Free!', discount: 33, type: 'percent' },
+  'COMBO18': { desc: 'Burger + Acai for $18!',  discount: 5,  type: 'fixed'   },
+  'WELCOME': { desc: '10% off your first order!',discount:10, type: 'percent' }
+};
+
+// PLATINUM CODES — influencer free item allowances (PLAT + 4 digits)
 var INFLUENCER_CODES = {
-  'MARIA10': { name: 'Maria Silva',    allowance: 2, used: 0, discount: 10, type: 'percent' },
-  'JOAO15':  { name: 'Joao Rodrigues', allowance: 5, used: 0, discount: 15, type: 'percent' },
-  'TEST':    { name: 'Test Account',   allowance: 2, used: 0, discount: 10, type: 'percent' }
+  'PLAT0001': { name: 'Maria Silva',    allowance: 2, used: 0 },
+  'PLAT0002': { name: 'Joao Rodrigues', allowance: 5, used: 0 },
+  'PLAT0003': { name: 'Test Influencer',allowance: 2, used: 0 }
 };
 var appliedInfluencerCode = null;
 
-function applyInfluencerCode() {
+async function applyInfluencerCode() {
   var code = document.getElementById('influencerCode').value.trim().toUpperCase();
-  var inf = INFLUENCER_CODES[code];
   var msgEl = document.getElementById('influencerMsg');
-  if (!code) { msgEl.textContent=''; appliedInfluencerCode=null; renderCart(); return; }
-  if (!inf) {
-    msgEl.innerHTML='<span style="color:#c2185b">Invalid code. Try again!</span>';
-    appliedInfluencerCode=null; renderCart(); return;
+  appliedInfluencerCode = null;
+  if (!code) { msgEl.textContent=''; renderCart(); return; }
+  msgEl.innerHTML='<span style="color:#b07050">Checking code...</span>';
+  try {
+    var res = await fetch(BACKEND+'/promo/'+code);
+    var data = await res.json();
+    if (!data.success) {
+      msgEl.innerHTML='<span style="color:#c2185b">'+data.error+'</span>';
+      renderCart(); return;
+    }
+    var c = data.code;
+    if (c.code_category === 'platinum') {
+      appliedInfluencerCode = {code:code, name:c.influencer_name, remaining:data.remaining, type:'platinum', discount:0};
+      msgEl.innerHTML='<span style="color:#22c55e">Welcome '+c.influencer_name+'! '+data.remaining+' free item(s) this month!</span>';
+    } else {
+      appliedInfluencerCode = {code:code, name:c.description, type:'promo', discount:c.discount_value, discountType:c.type};
+      msgEl.innerHTML='<span style="color:#22c55e">Code applied! '+c.description+'</span>';
+    }
+    renderCart();
+  } catch(e) {
+    msgEl.innerHTML='<span style="color:#c2185b">Connection error. Try again!</span>';
   }
-  if (inf.used >= inf.allowance) {
-    msgEl.innerHTML='<span style="color:#c2185b">All free items used this month! Resets on the 1st.</span>';
-    appliedInfluencerCode=null; renderCart(); return;
-  }
-  appliedInfluencerCode = {code:code,name:inf.name,allowance:inf.allowance,used:inf.used,discount:inf.discount,type:inf.type};
-  var remaining = inf.allowance - inf.used;
-  msgEl.innerHTML='<span style="color:#22c55e">Welcome '+inf.name+'! '+remaining+' free item(s) available! </span>';
-  renderCart();
 }
 var STRIPE_PK='pk_test_REPLACE_WITH_YOUR_STRIPE_KEY';
 var ZONES={bridgeport:{fee:2.99,free:25},fairfield:{fee:4.99,free:35},trumbull:{fee:4.99,free:35},shelton:{fee:6.99,free:45},monroe:{fee:6.99,free:45}};
@@ -796,7 +812,14 @@ function getDFee(){if(orderType!=='delivery'||!zone)return 0;return getSub()>=zo
 function getInfluencerDiscount(){
   if(!appliedInfluencerCode) return 0;
   var sub=getSub();
-  if(appliedInfluencerCode.type==='percent') return parseFloat((sub*appliedInfluencerCode.discount/100).toFixed(2));
+  if(appliedInfluencerCode.type==='platinum') {
+    // Free items — discount = cheapest item(s) up to allowance
+    var sorted=cart.slice().sort(function(a,b){return a.price-b.price;});
+    var disc=0;
+    for(var i=0;i<Math.min(appliedInfluencerCode.remaining,sorted.length);i++) disc+=sorted[i].price;
+    return parseFloat(disc.toFixed(2));
+  }
+  if(appliedInfluencerCode.discountType==='percent') return parseFloat((sub*appliedInfluencerCode.discount/100).toFixed(2));
   return Math.min(appliedInfluencerCode.discount,sub);
 }
 function getTotal(){return Math.max(0,getSub()+getDFee()-getInfluencerDiscount());}
@@ -830,7 +853,8 @@ function renderCart(){
     else if(f===0)feeHtml='<div class="sum-row"><span>Delivery fee</span><span class="free-tag">FREE 🎉</span></div>';
     else{var rem=(zone.free-s).toFixed(2);feeHtml='<div class="sum-row"><span>Delivery fee</span><span>$'+f.toFixed(2)+'</span></div>'+(rem>0?'<div class="sum-row"><span style="color:var(--green);font-size:11px">Add $'+rem+' more for free delivery!</span></div>':'');}
   }else{feeHtml='<div class="sum-row"><span>Pickup</span><span>No fee</span></div>';}
-  var discHtml=disc>0?'<div class="sum-row"><span>Influencer discount</span><span style="color:var(--green)">-$'+disc.toFixed(2)+'</span></div>':'';
+  var discLabel = appliedInfluencerCode ? (appliedInfluencerCode.type==='platinum'?'Free items (Platinum)':'Promo: '+appliedInfluencerCode.code) : '';
+  var discHtml=disc>0?'<div class="sum-row"><span>'+discLabel+'</span><span style="color:var(--green)">-$'+disc.toFixed(2)+'</span></div>':'';
   html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+discHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
   b.innerHTML=html;document.getElementById('payAmt').textContent='$'+t.toFixed(2);
 }
