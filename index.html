@@ -222,7 +222,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
     <button class="nav-pill" onclick="goSec('prensados',this)">🥪 Prensados</button>
     <button class="nav-pill" onclick="goSec('sides',this)">🍟 Sides</button>
     <button class="nav-pill" onclick="goSec('drinks',this)">🥤 Drinks</button>
-    <button class="nav-pill" onclick="goSec('news',this)">📰 News & Events</button>
+    <button class="nav-pill" onclick="goSec('news',this);loadNews()">📰 News & Events</button>
   </div>
 </div>
 <div class="menu-wrap">
@@ -924,6 +924,49 @@ async function showSuccess(orderId,phone,payMethod,amount){
   ov.innerHTML='<div style="background:white;border-radius:24px 24px 0 0;padding:40px 24px 48px;width:100%;max-width:580px;text-align:center;"><div style="font-size:56px;margin-bottom:12px">🎉</div><div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-bottom:8px">Order placed!</div><div style="font-size:14px;color:#b07050;margin-bottom:12px">'+(tableNumber?'Your food is coming to Table '+tableNumber+'!':'We\'ll call <b>'+phone+'</b> to confirm. ETA: 30-45 min.')+'</div>'+tableMsg+extra+'<div style="background:#fff9f4;border-radius:12px;padding:12px 16px;font-size:13px;color:#5c2a0e;font-weight:800;display:inline-block">Order #'+orderId+'</div><br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:24px;padding:12px 32px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer">Back to menu</button>'+orderMoreBtn+'</div>';
   ov.style.alignItems='flex-end';ov.classList.add('open');
 }
+// Load news from Supabase
+async function loadNews() {
+  var feed = document.getElementById('newsFeed');
+  if (!feed) return;
+  try {
+    var r = await fetch(BACKEND + '/news');
+    var data = await r.json();
+    if (!data.success || !data.posts.length) {
+      feed.innerHTML = '<div style="text-align:center;padding:32px;color:#c0a090;">No news yet — check back soon! 🐶</div>';
+      return;
+    }
+    var featured = data.posts.filter(function(p){return p.featured;});
+    var regular = data.posts.filter(function(p){return !p.featured;});
+    var html = '';
+    featured.forEach(function(p){
+      html += '<div class="news-card featured">' +
+        '<div class="news-badge">🔥 Featured</div>' +
+        '<div class="news-img">'+p.emoji+'</div>' +
+        '<div class="news-body">' +
+          '<div class="news-date">'+p.date_label+'</div>' +
+          '<div class="news-title">'+p.title+'</div>' +
+          '<div class="news-text">'+p.content+'</div>' +
+        '</div></div>';
+    });
+    if(regular.length){
+      html += '<div class="news-grid">';
+      regular.forEach(function(p){
+        html += '<div class="news-card">' +
+          '<div class="news-img">'+p.emoji+'</div>' +
+          '<div class="news-body">' +
+            '<div class="news-date">'+p.date_label+'</div>' +
+            '<div class="news-title">'+p.title+'</div>' +
+            '<div class="news-text">'+p.content.substring(0,100)+'...</div>' +
+          '</div></div>';
+      });
+      html += '</div>';
+    }
+    feed.innerHTML = html;
+  } catch(e) {
+    feed.innerHTML = '<div style="text-align:center;padding:32px;color:#c0a090;">Could not load news. Try again later!</div>';
+  }
+}
+
 function goSec(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');}
 window.addEventListener('scroll',function(){var secs=['acai','bottles','burgers','hotdogs','prensados','sides','drinks'],pills=document.querySelectorAll('.nav-pill'),cur=0;secs.forEach(function(id,i){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});pills.forEach(function(p,i){p.classList.toggle('active',i===cur);});});
 updBuilder();
