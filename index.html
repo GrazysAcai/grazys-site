@@ -658,11 +658,20 @@ var tableNumber = null;
   var t = params.get('table');
   if (t) {
     tableNumber = t;
-    // Show table banner
+    // Show table banner ABOVE nav
     var banner = document.createElement('div');
-    banner.style.cssText = 'background:#5c2a0e;color:#fde68a;text-align:center;padding:10px;font-family:Paytone One,sans-serif;font-size:14px;position:sticky;top:52px;z-index:49;';
-    banner.innerHTML = '🍽️ Table ' + t + ' — We\'ll bring your order right to you! &nbsp;|&nbsp; 🫐 <b>+50 bonus points</b> for ordering here! &nbsp;|&nbsp; 💸 <b>5% off</b> your first scan order!';
-    document.querySelector('.nav-sticky').after(banner);
+    banner.id = 'tableBanner';
+    banner.style.cssText = 'background:#5c2a0e;color:#fde68a;text-align:center;padding:10px 16px;font-family:Nunito,sans-serif;font-size:13px;font-weight:700;';
+    banner.innerHTML = '🍽️ <b>Table ' + t + '</b> — Sit down & order! &nbsp;🫐 <b>+50 bonus pts</b> &nbsp;|&nbsp; 💸 <b>5% off</b> first scan!';
+    document.querySelector('.lang-bar').after(banner);
+    // Auto set to dine-in (pickup) for table orders
+    setTimeout(function(){
+      setType('pickup');
+      document.getElementById('addrWrap').style.display = 'none';
+      // Add dine-in option
+      document.getElementById('btnPick').textContent = '🍽️ Dine In';
+      document.getElementById('btnDel').style.display = 'block';
+    }, 500);
   }
 })();
 }
