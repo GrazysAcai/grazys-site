@@ -897,32 +897,94 @@ async function checkout(){
   }catch(e){document.getElementById('card-errors').textContent='Connection error.';btn.disabled=false;btn.innerHTML='💳 Pay · $'+getTotal().toFixed(2);}
 }
 async function showSuccess(orderId,phone,payMethod,amount){
-  // Try to get OneSignal player ID and save it
   try {
     var pid = await getPlayerID();
-    if (pid) {
-      // Save player ID with order so backend can send updates
-      fetch('https://grazys-backend-production.up.railway.app/save-player-id', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ orderId, playerId: pid, phone })
-      }).catch(function(){});
-      // Send instant confirmation notification
-      setTimeout(function() {
-        sendOrderNotification(pid, "Order received! 🫐", "We got your order #" + orderId + "! We're preparing it now.");
-      }, 2000);
+    if(pid){
+      fetch(BACKEND+'/save-player-id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId,playerId:pid,phone})}).catch(function(){});
+      setTimeout(function(){sendOrderNotification(pid,'Order received! 🫐','We got your order #'+orderId+'! We are preparing it now.');},2000);
     }
-  } catch(e) {}
+  } catch(e){}
+
+  // Build receipt items
+  var itemsHtml = '';
+  var receiptItems = cart.slice(); // save before clearing
+  receiptItems.forEach(function(item){
+    itemsHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #fce7d6;font-size:13px;">' +
+      '<span style="color:#5c2a0e;font-weight:600;">' + (item.qty>1?item.qty+'x ':'') + item.name + (item.toppings?'<br><span style="font-size:11px;color:#b07050;">'+item.toppings+'</span>':'') + '</span>' +
+      '<span style="font-weight:800;color:#5c2a0e;">$'+(item.price*item.qty).toFixed(2)+'</span></div>';
+  });
 
   closeCart();
-  var extra='';
-  if(payMethod==='venmo')extra='<div style="background:#e8f4fd;border:1.5px solid #93c5fd;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#1d4ed8;font-weight:700;">💙 Send $'+amount.toFixed(2)+' to <b>@grazysacai</b> on Venmo<br>Note: <b>#'+orderId+'</b></div>';
-  if(payMethod==='zelle')extra='<div style="background:#f3e8ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#6d28d9;font-weight:700;">💜 Send $'+amount.toFixed(2)+' to <b>(203) 726-4127</b> on Zelle<br>Note: <b>#'+orderId+'</b></div>';
-  var ov=document.getElementById('overlay');
-  var tableMsg = tableNumber ? '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:#166534;font-weight:700">🍽️ Sit back! We\'re bringing it to Table '+tableNumber+'<br>⭐ +50 bonus points added!</div>' : '';
-  var orderMoreBtn = tableNumber ? '<br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:10px;padding:12px 32px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer">➕ Order More Items</button>' : '';
-  ov.innerHTML='<div style="background:white;border-radius:24px 24px 0 0;padding:40px 24px 48px;width:100%;max-width:580px;text-align:center;"><div style="font-size:56px;margin-bottom:12px">🎉</div><div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-bottom:8px">Order placed!</div><div style="font-size:14px;color:#b07050;margin-bottom:12px">'+(tableNumber?'Your food is coming to Table '+tableNumber+'!':'We\'ll call <b>'+phone+'</b> to confirm. ETA: 30-45 min.')+'</div>'+tableMsg+extra+'<div style="background:#fff9f4;border-radius:12px;padding:12px 16px;font-size:13px;color:#5c2a0e;font-weight:800;display:inline-block">Order #'+orderId+'</div><br><button onclick="document.getElementById(\'overlay\').classList.remove(\'open\')" style="margin-top:24px;padding:12px 32px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer">Back to menu</button>'+orderMoreBtn+'</div>';
-  ov.style.alignItems='flex-end';ov.classList.add('open');
+
+  var paymentHtml = '';
+  if(payMethod==='venmo') paymentHtml = '<div style="background:#e8f4fd;border:1.5px solid #93c5fd;border-radius:12px;padding:14px;margin:12px 0;text-align:left;">' +
+    '<div style="font-size:13px;font-weight:800;color:#1d4ed8;margin-bottom:6px;">💙 Pay with Venmo</div>' +
+    '<div style="font-size:13px;color:#1d4ed8;">Send <b>$'+amount.toFixed(2)+'</b> to <b>@grazysacai</b></div>' +
+    '<div style="font-size:12px;color:#1d4ed8;margin-top:4px;">Note: <b>Order #'+orderId+'</b></div></div>';
+  if(payMethod==='zelle') paymentHtml = '<div style="background:#f3e8ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:14px;margin:12px 0;text-align:left;">' +
+    '<div style="font-size:13px;font-weight:800;color:#6d28d9;margin-bottom:6px;">💜 Pay with Zelle</div>' +
+    '<div style="font-size:13px;color:#6d28d9;">Send <b>$'+amount.toFixed(2)+'</b> to <b>(203) 726-4127</b></div>' +
+    '<div style="font-size:12px;color:#6d28d9;margin-top:4px;">Note: <b>Order #'+orderId+'</b></div></div>';
+  if(payMethod==='card') paymentHtml = '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">💳 Card payment confirmed!</div>';
+  if(payMethod==='cash') paymentHtml = '<div style="background:#fefce8;border:1.5px solid #fde047;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#854d0e;font-weight:700;">💵 Pay with cash on delivery/pickup</div>';
+
+  var tableMsg = tableNumber ? '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">🍽️ Bringing to Table '+tableNumber+' · +50 bonus points!</div>' : '';
+
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+
+  var ov = document.getElementById('overlay');
+  ov.innerHTML = '<div id="receiptBox" style="background:white;border-radius:20px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;margin:auto;">' +
+    // Header
+    '<div style="text-align:center;margin-bottom:16px;">' +
+      '<div style="font-size:48px;">🎉</div>' +
+      '<div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-top:8px;">Order Confirmed!</div>' +
+      '<div style="font-size:13px;color:#b07050;margin-top:4px;">'+(tableNumber?'Bringing to Table '+tableNumber:'ETA: 30-45 min · We will call '+phone)+'</div>' +
+    '</div>' +
+    // Receipt
+    '<div style="border:1.5px solid #fce7d6;border-radius:14px;padding:16px;margin-bottom:12px;">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:10px;">' +
+        '<div style="font-size:11px;font-weight:800;color:#b07050;text-transform:uppercase;">Order #'+orderId+'</div>' +
+        '<div style="font-size:11px;color:#b07050;">'+dateStr+'</div>' +
+      '</div>' +
+      itemsHtml +
+      '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:15px;font-weight:900;color:#5c2a0e;margin-top:4px;">' +
+        '<span>Total</span><span>$'+amount.toFixed(2)+'</span>' +
+      '</div>' +
+    '</div>' +
+    tableMsg +
+    paymentHtml +
+    // Download button
+    '<button onclick="downloadReceipt(''+orderId+'',''+dateStr+'')" style="width:100%;padding:13px;background:#fff9f4;border:1.5px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:800;color:#5c2a0e;cursor:pointer;margin-bottom:10px;">📄 Download Receipt</button>' +
+    // Back button
+    '<button onclick="document.getElementById('overlay').classList.remove('open');document.getElementById('overlay').style.alignItems='';" style="width:100%;padding:13px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Back to menu</button>' +
+    (tableNumber?'<br><button onclick="document.getElementById('overlay').classList.remove('open')" style="width:100%;padding:12px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Order More</button>':'') +
+  '</div>';
+
+  ov.style.alignItems = 'center';
+  ov.style.padding = '16px';
+  ov.classList.add('open');
+}
+
+function downloadReceipt(orderId, dateStr) {
+  var box = document.getElementById('receiptBox');
+  if (!box) return;
+  // Create printable version
+  var w = window.open('', '_blank');
+  w.document.write('<html><head><title>Receipt - Order #'+orderId+'</title>' +
+    '<style>body{font-family:Arial,sans-serif;padding:20px;max-width:400px;margin:0 auto;}' +
+    'h1{color:#5c2a0e;font-size:20px;} .item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;}' +
+    '.total{display:flex;justify-content:space-between;font-weight:bold;font-size:16px;margin-top:8px;}' +
+    'button{display:none;}</style></head><body>' +
+    '<div style="text-align:center;margin-bottom:20px;">' +
+    '<img src="https://grazys-acai.netlify.app/favicon.png" style="width:60px;" onerror="this.style.display='none'"/>' +
+    '<h1>Grazy's Açaí</h1>' +
+    '<p style="color:#888;">666 Brooklawn Ave, Bridgeport CT<br>(203) 726-4127</p>' +
+    '</div>' +
+    box.innerHTML +
+    '<script>window.onload=function(){window.print();}<\/script>' +
+    '</body></html>');
+  w.document.close();
 }
 // Load news from Supabase
 async function loadNews() {
