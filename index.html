@@ -294,7 +294,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <div class="menu-section" id="bottles">
   <div class="sec-title" id="bottlesSecTitle">🥤 Smoothie Collection</div>
   <div class="sec-sub" id="bottlesSecSub">Smoothies Trufados — Premium 16oz</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="smoothies-grid">
     <div class="card" onclick="add('Classic Gold Truffle',10)"><div class="card-img">🍫</div><div class="card-body"><div class="card-name">Classic Gold Truffle</div><div class="card-desc">Açaí trufado com Ninho e leite condensado</div><div class="card-foot"><span class="card-price">$10</span><button class="add-btn" onclick="event.stopPropagation();add('Classic Gold Truffle',10)">+</button></div></div></div>
     <div class="card" onclick="add('Ninho Supreme',14)"><div class="card-img">⭐</div><div class="card-body"><div class="card-name">Ninho Supreme</div><div class="card-desc">Trufado intenso com creme especial de Ninho</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Ninho Supreme',14)">+</button></div></div></div>
     <div class="card" onclick="add('Passion Velvet',14)"><div class="card-img">🌸</div><div class="card-body"><div class="card-name">Passion Velvet</div><div class="card-desc">Açaí trufado com creme de maracujá cremoso</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Passion Velvet',14)">+</button></div></div></div>
@@ -314,7 +314,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <div class="menu-section" id="burgers">
   <div class="sec-title" id="burgersSecTitle">🍔 Burgers</div>
   <div class="sec-sub" id="burgersSecSub">Extras: +$3 bife extra · +$2 bacon · +$1 banana · +$1 muçarela</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="burgers-grid">
     <div class="card" onclick="openBurger('Burguer Smash',6,'Pão, carne, cheddar')"><div class="card-img">🍔</div><div class="card-body"><div class="card-name">Burguer Smash</div><div class="card-desc">Pão, carne, cheddar</div><div class="card-foot"><span class="card-price">$6</span><button class="add-btn" onclick="event.stopPropagation();openBurger('Burguer Smash',6,'Pão, carne, cheddar')">+</button></div></div></div>
     <div class="card" onclick="openBurger('Burguer Smash Duplo',8,'Pão, carne, cheddar, carne')"><div class="card-img">🧀</div><div class="card-body"><div class="card-name">Burguer Smash Duplo</div><div class="card-desc">Pão, carne, cheddar, carne</div><div class="card-foot"><span class="card-price">$8</span><button class="add-btn" onclick="event.stopPropagation();openBurger('Burguer Smash Duplo',8,'Pão, carne, cheddar, carne')">+</button></div></div></div>
     <div class="card" onclick="openBurger('Burguer Smash Bacon',10,'Pão, carne, cheddar, bacon, alface, tomate, pickles')"><div class="card-img">🥓</div><div class="card-body"><div class="card-name">Burguer Smash Bacon</div><div class="card-desc">Pão, carne, cheddar, bacon, alface, tomate, pickles</div><div class="card-foot"><span class="card-price">$10</span><button class="add-btn" onclick="event.stopPropagation();openBurger('Burguer Smash Bacon',10,'Pão, carne, cheddar, bacon, alface, tomate, pickles')">+</button></div></div></div>
@@ -329,7 +329,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <div class="menu-section" id="hotdogs">
   <div class="sec-title" id="hotdogsSecTitle">🌭 Hot Dogs Dock</div>
   <div class="sec-sub" id="hotdogsSecSub">Individual or Combo (+fries +drink)</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="hotdogs-grid">
     <div class="card" onclick="openCombo('Dock Tudo',10,18)"><div class="card-img">🌭</div><div class="card-body"><div class="card-name">Dock Tudo</div><div class="card-desc">Pão, molho quente, salsicha, maionese caseira, bacon, banana, ovo, batata palha, milho, ervilha, parmesão, muçarela, cheddar, crisp</div><div class="card-foot"><span class="card-price">$10 <span class="combo-tag">Combo $18</span></span><button class="add-btn" onclick="event.stopPropagation();openCombo('Dock Tudo',10,18)">+</button></div></div></div>
     <div class="card" onclick="openCombo('Dock Bacon',9,14)"><div class="card-img">🥓</div><div class="card-body"><div class="card-name">Dock Bacon</div><div class="card-desc">Pão, molho quente, salsicha, maionese caseira, bacon, batata palha, milho, ervilha, parmesão, muçarela, crisp</div><div class="card-foot"><span class="card-price">$9 <span class="combo-tag">Combo $14</span></span><button class="add-btn" onclick="event.stopPropagation();openCombo('Dock Bacon',9,14)">+</button></div></div></div>
     <div class="card" onclick="openCombo('Dock Duplo',9,14)"><div class="card-img">🌭</div><div class="card-body"><div class="card-name">Dock Duplo</div><div class="card-desc">Pão, molho quente, 2 salsichas, maionese caseira, batata palha, milho, ervilha, parmesão, muçarela, crisp</div><div class="card-foot"><span class="card-price">$9 <span class="combo-tag">Combo $14</span></span><button class="add-btn" onclick="event.stopPropagation();openCombo('Dock Duplo',9,14)">+</button></div></div></div>
@@ -344,7 +344,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <!-- PRENSADOS -->
 <div class="menu-section" id="prensados">
   <div class="sec-title" id="prensadosSecTitle">🥪 Hot Dogs Prensados</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="prensados-grid">
     <div class="card" onclick="add('Prensado Paulista',12)"><div class="card-img">🌭</div><div class="card-body"><div class="card-name">Prensado Paulista</div><div class="card-desc">Molho de tomate, bacon, salsicha, purê, vinagrete, catupiry, cheddar, milho, maionese, batata palha</div><div class="card-foot"><span class="card-price">$12</span><button class="add-btn" onclick="event.stopPropagation();add('Prensado Paulista',12)">+</button></div></div></div>
     <div class="card" onclick="add('Prensado 4 Queijos',10)"><div class="card-img">🧀</div><div class="card-body"><div class="card-name">Prensado 4 Queijos</div><div class="card-desc">2 salsichas, catupiry, cheddar, muçarela, parmesão, purê, batata palha, maionese caseira, milho</div><div class="card-foot"><span class="card-price">$10</span><button class="add-btn" onclick="event.stopPropagation();add('Prensado 4 Queijos',10)">+</button></div></div></div>
     <div class="card" onclick="add('Prensado Bacon',10)"><div class="card-img">🥓</div><div class="card-body"><div class="card-name">Prensado Bacon</div><div class="card-desc">Salsicha, bacon, muçarela, parmesão, purê, batata palha, maionese caseira, milho</div><div class="card-foot"><span class="card-price">$10</span><button class="add-btn" onclick="event.stopPropagation();add('Prensado Bacon',10)">+</button></div></div></div>
@@ -358,7 +358,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <!-- SIDES -->
 <div class="menu-section" id="sides">
   <div class="sec-title" id="sidesSecTitle">🍟 Sides & Extras</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="sides-grid">
     <div class="card" onclick="add('Prato do Dia',14)"><div class="card-img">🍽️</div><div class="card-body"><div class="card-name" id="plateDayName">Prato do Dia</div><div class="card-desc" id="plateDayDesc">Ask us what's cooking today!</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Prato do Dia',14)">+</button></div></div></div>
     <div class="card" onclick="add('Pastéis',4)"><div class="card-img">🥟</div><div class="card-body"><div class="card-name">Pastéis</div><div class="card-desc">Crispy Brazilian pastries</div><div class="card-foot"><span class="card-price">$4</span><button class="add-btn" onclick="event.stopPropagation();add('Pastéis',4)">+</button></div></div></div>
     <div class="card" onclick="add('Batata Frita',3)"><div class="card-img">🍟</div><div class="card-body"><div class="card-name">Batata Frita</div><div class="card-desc">Golden crispy fries</div><div class="card-foot"><span class="card-price">$3</span><button class="add-btn" onclick="event.stopPropagation();add('Batata Frita',3)">+</button></div></div></div>
@@ -369,7 +369,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <!-- DRINKS -->
 <div class="menu-section" id="drinks">
   <div class="sec-title" id="drinksSecTitle">🥤 Drinks</div>
-  <div class="cards-grid">
+  <div class="cards-grid" id="drinks-grid">
     <div class="card" onclick="add('Refrigerante',2)"><div class="card-img">🥤</div><div class="card-body"><div class="card-name" id="sodaName">Soda</div><div class="card-desc" id="sodaDesc">Coke, Sprite, Water...</div><div class="card-foot"><span class="card-price">$2</span><button class="add-btn" onclick="event.stopPropagation();add('Refrigerante',2)">+</button></div></div></div>
     <div class="card" onclick="add('Suco de Polpa',3)"><div class="card-img">🍹</div><div class="card-body"><div class="card-name" id="juiceName">Fruit Juice</div><div class="card-desc" id="juiceDesc">Natural fruit pulp juice</div><div class="card-foot"><span class="card-price">$3</span><button class="add-btn" onclick="event.stopPropagation();add('Suco de Polpa',3)">+</button></div></div></div>
   </div>
@@ -977,6 +977,108 @@ async function loadNews() {
     feed.innerHTML = '<div style="text-align:center;padding:32px;color:#c0a090;">Could not load news. Try again later!</div>';
   }
 }
+
+// ── DYNAMIC MENU FROM SUPABASE ───────────────────────────
+var menuData = {}; // cache
+
+async function loadMenuSection(category) {
+  if (menuData[category]) return menuData[category];
+  try {
+    var r = await fetch(BACKEND + '/menu?category=' + category);
+    var data = await r.json();
+    if (data.success && data.items.length) {
+      menuData[category] = data.items;
+      return data.items;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function buildMenuCard(item) {
+  var imgHtml = '';
+  if (item.image_url) {
+    imgHtml = '<img src="'+item.image_url+'" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:10px;"/>';
+  }
+  return imgHtml;
+}
+
+// ── DYNAMIC MENU LOADER ──────────────────────────────────
+var menuCache = {};
+
+async function loadDynamicMenus() {
+  var sections = [
+    {id:'smoothies-grid', cat:'smoothies', type:'simple'},
+    {id:'burgers-grid',   cat:'burgers',   type:'burger'},
+    {id:'hotdogs-grid',   cat:'hotdogs',   type:'combo'},
+    {id:'prensados-grid', cat:'prensados', type:'simple'},
+    {id:'sides-grid',     cat:'sides',     type:'simple'},
+    {id:'drinks-grid',    cat:'drinks',    type:'simple'},
+  ];
+  
+  try {
+    var r = await fetch(BACKEND + '/menu');
+    var data = await r.json();
+    if (!data.success) return;
+    
+    sections.forEach(function(sec) {
+      var el = document.getElementById(sec.id);
+      if (!el) return;
+      var items = data.items.filter(function(i){ return i.category === sec.cat; });
+      if (!items.length) return;
+      
+      // Clear existing hardcoded items
+      el.innerHTML = '';
+      
+      items.forEach(function(item) {
+        var imgHtml = item.image_url
+          ? '<img src="'+item.image_url+'" style="width:100%;height:140px;object-fit:cover;border-radius:10px 10px 0 0;margin:-12px -12px 10px -12px;width:calc(100% + 24px);" />'
+          : '<div class="card-img">'+(item.emoji||'🍽️')+'</div>';
+        
+        var price = '$'+parseFloat(item.price).toFixed(0);
+        var card = document.createElement('div');
+        card.className = 'card';
+        
+        if (sec.type === 'burger') {
+          card.onclick = function(){ openBurger(item.name, item.price, item.description||''); };
+          card.innerHTML = imgHtml +
+            '<div class="card-body">'+
+              '<div class="card-name">'+item.name+'</div>'+
+              '<div class="card-desc">'+(item.description||'')+'</div>'+
+              '<div class="card-foot"><span class="card-price">'+price+'</span>'+
+              '<button class="add-btn" onclick="event.stopPropagation();openBurger(''+item.name.replace(/'/g,"\'")+"',"+item.price+',''+((item.description||'').replace(/'/g,"\'"))+"');">+</button></div>"+
+            '</div>';
+        } else if (sec.type === 'combo' && item.price2) {
+          card.onclick = function(){ openCombo(item.name, item.price, item.price2); };
+          card.innerHTML = imgHtml +
+            '<div class="card-body">'+
+              '<div class="card-name">'+item.name+'</div>'+
+              '<div class="card-desc">'+(item.description||'')+'</div>'+
+              '<div class="card-foot"><span class="card-price">'+price+' <span class="combo-tag">Combo $'+parseFloat(item.price2).toFixed(0)+'</span></span>'+
+              '<button class="add-btn" onclick="event.stopPropagation();openCombo(''+item.name.replace(/'/g,"\'")+"',"+item.price+','+item.price2+');">+</button></div>'+
+            '</div>';
+        } else {
+          card.onclick = function(){ add(item.name, item.price); };
+          card.innerHTML = imgHtml +
+            '<div class="card-body">'+
+              '<div class="card-name">'+item.name+'</div>'+
+              '<div class="card-desc">'+(item.description||'')+'</div>'+
+              '<div class="card-foot"><span class="card-price">'+price+'</span>'+
+              '<button class="add-btn" onclick="event.stopPropagation();add(''+item.name.replace(/'/g,"\'")+"',"+item.price+');">+</button></div>'+
+            '</div>';
+        }
+        el.appendChild(card);
+      });
+    });
+  } catch(e) {
+    console.warn('Menu load error:', e);
+    // Keep hardcoded items on error
+  }
+}
+
+// Load dynamic menus on page load
+window.addEventListener('load', function(){
+  setTimeout(loadDynamicMenus, 500);
+});
 
 function goSec(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');}
 window.addEventListener('scroll',function(){var secs=['acai','bottles','burgers','hotdogs','prensados','sides','drinks'],pills=document.querySelectorAll('.nav-pill'),cur=0;secs.forEach(function(id,i){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});pills.forEach(function(p,i){p.classList.toggle('active',i===cur);});});
