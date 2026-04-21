@@ -1003,75 +1003,86 @@ function buildMenuCard(item) {
 }
 
 // ── DYNAMIC MENU LOADER ──────────────────────────────────
-var menuCache = {};
-
 async function loadDynamicMenus() {
-  var sections = [
-    {id:'smoothies-grid', cat:'smoothies', type:'simple'},
-    {id:'burgers-grid',   cat:'burgers',   type:'burger'},
-    {id:'hotdogs-grid',   cat:'hotdogs',   type:'combo'},
-    {id:'prensados-grid', cat:'prensados', type:'simple'},
-    {id:'sides-grid',     cat:'sides',     type:'simple'},
-    {id:'drinks-grid',    cat:'drinks',    type:'simple'},
-  ];
-  
   try {
     var r = await fetch(BACKEND + '/menu');
     var data = await r.json();
-    if (!data.success) return;
-    
-    sections.forEach(function(sec) {
-      var el = document.getElementById(sec.id);
+    if (!data.success || !data.items) return;
+
+    var sectionMap = {
+      'smoothies': {gridId:'smoothies-grid', type:'simple'},
+      'burgers':   {gridId:'burgers-grid',   type:'burger'},
+      'hotdogs':   {gridId:'hotdogs-grid',   type:'combo'},
+      'prensados': {gridId:'prensados-grid', type:'simple'},
+      'sides':     {gridId:'sides-grid',     type:'simple'},
+      'drinks':    {gridId:'drinks-grid',    type:'simple'},
+    };
+
+    data.items.forEach(function(item) {
+      var sec = sectionMap[item.category];
+      if (!sec) return;
+      var el = document.getElementById(sec.gridId);
       if (!el) return;
-      var items = data.items.filter(function(i){ return i.category === sec.cat; });
-      if (!items.length) return;
-      
-      // Clear existing hardcoded items
-      el.innerHTML = '';
-      
-      items.forEach(function(item) {
-        var imgHtml = item.image_url
-          ? '<img src="'+item.image_url+'" style="width:100%;height:140px;object-fit:cover;border-radius:10px 10px 0 0;margin:-12px -12px 10px -12px;width:calc(100% + 24px);" />'
-          : '<div class="card-img">'+(item.emoji||'🍽️')+'</div>';
-        
-        var price = '$'+parseFloat(item.price).toFixed(0);
-        var card = document.createElement('div');
-        card.className = 'card';
-        
-        if (sec.type === 'burger') {
-          card.onclick = function(){ openBurger(item.name, item.price, item.description||''); };
-          card.innerHTML = imgHtml +
-            '<div class="card-body">'+
-              '<div class="card-name">'+item.name+'</div>'+
-              '<div class="card-desc">'+(item.description||'')+'</div>'+
-              '<div class="card-foot"><span class="card-price">'+price+'</span>'+
-              '<button class="add-btn" onclick="event.stopPropagation();openBurger(''+item.name.replace(/'/g,"\'")+"',"+item.price+',''+((item.description||'').replace(/'/g,"\'"))+"');">+</button></div>"+
-            '</div>';
-        } else if (sec.type === 'combo' && item.price2) {
-          card.onclick = function(){ openCombo(item.name, item.price, item.price2); };
-          card.innerHTML = imgHtml +
-            '<div class="card-body">'+
-              '<div class="card-name">'+item.name+'</div>'+
-              '<div class="card-desc">'+(item.description||'')+'</div>'+
-              '<div class="card-foot"><span class="card-price">'+price+' <span class="combo-tag">Combo $'+parseFloat(item.price2).toFixed(0)+'</span></span>'+
-              '<button class="add-btn" onclick="event.stopPropagation();openCombo(''+item.name.replace(/'/g,"\'")+"',"+item.price+','+item.price2+');">+</button></div>'+
-            '</div>';
-        } else {
-          card.onclick = function(){ add(item.name, item.price); };
-          card.innerHTML = imgHtml +
-            '<div class="card-body">'+
-              '<div class="card-name">'+item.name+'</div>'+
-              '<div class="card-desc">'+(item.description||'')+'</div>'+
-              '<div class="card-foot"><span class="card-price">'+price+'</span>'+
-              '<button class="add-btn" onclick="event.stopPropagation();add(''+item.name.replace(/'/g,"\'")+"',"+item.price+');">+</button></div>'+
-            '</div>';
-        }
-        el.appendChild(card);
-      });
+
+      // Only replace if we haven't already
+      if (!el.dataset.loaded) {
+        el.innerHTML = '';
+        el.dataset.loaded = '1';
+      }
+
+      var imgHtml = item.image_url
+        ? '<div style="margin:-12px -12px 10px -12px;overflow:hidden;border-radius:10px 10px 0 0;"><img src="' + item.image_url + '" style="width:100%;height:140px;object-fit:cover;display:block;"/></div>'
+        : '<div class="card-img">' + (item.emoji || '🍽️') + '</div>';
+
+      var price = '$' + parseFloat(item.price).toFixed(0);
+      var card = document.createElement('div');
+      card.className = 'card';
+
+      if (sec.type === 'burger') {
+        var bName = item.name, bPrice = item.price, bDesc = item.description || '';
+        card.onclick = function(){ openBurger(bName, bPrice, bDesc); };
+        card.innerHTML = imgHtml +
+          '<div class="card-body">' +
+            '<div class="card-name">' + item.name + '</div>' +
+            '<div class="card-desc">' + (item.description || '') + '</div>' +
+            '<div class="card-foot"><span class="card-price">' + price + '</span>' +
+            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
+          '</div>';
+        card.querySelector('#btn-' + item.id).onclick = function(e){
+          e.stopPropagation(); openBurger(bName, bPrice, bDesc);
+        };
+      } else if (sec.type === 'combo') {
+        var cName = item.name, cPrice = item.price, cPrice2 = item.price2 || 0;
+        card.onclick = function(){ openCombo(cName, cPrice, cPrice2); };
+        var comboTag = cPrice2 ? ' <span class="combo-tag">Combo $' + parseFloat(cPrice2).toFixed(0) + '</span>' : '';
+        card.innerHTML = imgHtml +
+          '<div class="card-body">' +
+            '<div class="card-name">' + item.name + '</div>' +
+            '<div class="card-desc">' + (item.description || '') + '</div>' +
+            '<div class="card-foot"><span class="card-price">' + price + comboTag + '</span>' +
+            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
+          '</div>';
+        card.querySelector('#btn-' + item.id).onclick = function(e){
+          e.stopPropagation(); openCombo(cName, cPrice, cPrice2);
+        };
+      } else {
+        var sName = item.name, sPrice = item.price;
+        card.onclick = function(){ add(sName, sPrice); };
+        card.innerHTML = imgHtml +
+          '<div class="card-body">' +
+            '<div class="card-name">' + item.name + '</div>' +
+            '<div class="card-desc">' + (item.description || '') + '</div>' +
+            '<div class="card-foot"><span class="card-price">' + price + '</span>' +
+            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
+          '</div>';
+        card.querySelector('#btn-' + item.id).onclick = function(e){
+          e.stopPropagation(); add(sName, sPrice);
+        };
+      }
+      el.appendChild(card);
     });
   } catch(e) {
     console.warn('Menu load error:', e);
-    // Keep hardcoded items on error
   }
 }
 
