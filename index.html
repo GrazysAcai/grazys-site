@@ -1003,3 +1003,45 @@ function downloadReceipt() {
   w.document.write('</body></html>');
   w.document.close();
 }
+
+function goSec(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-pill').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+}
+
+function loadNews(){
+  var feed=document.getElementById('newsFeed');
+  if(!feed)return;
+  fetch(BACKEND+'/news').then(function(r){return r.json();}).then(function(data){
+    if(!data.success||!data.posts||!data.posts.length){feed.innerHTML='<div style="text-align:center;padding:40px;color:#b07050;">No news yet!</div>';return;}
+    feed.innerHTML=data.posts.map(function(p){
+      var media='';
+      if(p.image_url)media='<img src="'+p.image_url+'" style="width:100%;border-radius:12px;margin-bottom:12px;max-height:240px;object-fit:cover;"/>';
+      else if(p.video_url)media='<div style="margin-bottom:12px;"><iframe src="'+p.video_url+'" style="width:100%;height:200px;border:none;border-radius:12px;" allowfullscreen></iframe></div>';
+      return '<div style="background:white;border-radius:16px;padding:20px;margin-bottom:16px;border:1.5px solid #fce7d6;">'+media+'<div style="font-size:12px;font-weight:800;color:var(--pink-dark);margin-bottom:6px;">'+(p.emoji||'📰')+' '+(p.date_label||'')+'</div><div style="font-size:18px;font-weight:900;color:var(--brown);margin-bottom:8px;">'+p.title+'</div><div style="font-size:14px;color:#5c2a0e;line-height:1.6;">'+p.content+'</div></div>';
+    }).join('');
+  }).catch(function(){feed.innerHTML='<div style="text-align:center;padding:40px;color:#b07050;">Could not load news.</div>';});
+}
+
+// Scroll spy for nav pills
+window.addEventListener('scroll',function(){
+  var secs=['acai','bottles','burgers','hotdogs','prensados','sides','drinks'];
+  var pills=document.querySelectorAll('.nav-pill');
+  var cur=0;
+  secs.forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el&&el.getBoundingClientRect().top<120)cur=i;
+  });
+  pills.forEach(function(p,i){p.classList.toggle('active',i===cur);});
+});
+
+// Load dynamic menu on page load
+window.addEventListener('load',function(){
+  setTimeout(loadDynamicMenus,500);
+});
+
+updBuilder();
+</script>
+</body>
+</html>
