@@ -200,8 +200,8 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
     </div>
     <div class="header-badges">
       <span class="badge">🛵 We deliver!</span>
-      <span class="badge">💵 Cash · Venmo · Zelle · Card</span>
-      <span class="badge">🎉 Zero commission</span>
+      <span class="badge">&#128181; Cash · Venmo · Zelle · Card</span>
+      <span class="badge">&#127881; Zero commission</span>
       <span class="badge">📞 (203) 726-4127</span>
     </div>
   </div>
@@ -359,7 +359,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 <div class="menu-section" id="sides">
   <div class="sec-title" id="sidesSecTitle">🍟 Sides & Extras</div>
   <div class="cards-grid" id="sides-grid">
-    <div class="card" onclick="add('Prato do Dia',14)"><div class="card-img">🍽️</div><div class="card-body"><div class="card-name" id="plateDayName">Prato do Dia</div><div class="card-desc" id="plateDayDesc">Ask us what's cooking today!</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Prato do Dia',14)">+</button></div></div></div>
+    <div class="card" onclick="add('Prato do Dia',14)"><div class="card-img">&#127869;</div><div class="card-body"><div class="card-name" id="plateDayName">Prato do Dia</div><div class="card-desc" id="plateDayDesc">Ask us what's cooking today!</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Prato do Dia',14)">+</button></div></div></div>
     <div class="card" onclick="add('Pastéis',4)"><div class="card-img">🥟</div><div class="card-body"><div class="card-name">Pastéis</div><div class="card-desc">Crispy Brazilian pastries</div><div class="card-foot"><span class="card-price">$4</span><button class="add-btn" onclick="event.stopPropagation();add('Pastéis',4)">+</button></div></div></div>
     <div class="card" onclick="add('Batata Frita',3)"><div class="card-img">🍟</div><div class="card-body"><div class="card-name">Batata Frita</div><div class="card-desc">Golden crispy fries</div><div class="card-foot"><span class="card-price">$3</span><button class="add-btn" onclick="event.stopPropagation();add('Batata Frita',3)">+</button></div></div></div>
     <div class="card" onclick="add('Churros',3)"><div class="card-img">🍡</div><div class="card-body"><div class="card-name">Churros</div><div class="card-desc">Crispy churros with cinnamon sugar</div><div class="card-foot"><span class="card-price">$3</span><button class="add-btn" onclick="event.stopPropagation();add('Churros',3)">+</button></div></div></div>
@@ -388,7 +388,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
           <div class="news-date">April 2026</div>
           <div class="news-title">Grazy's Açaí Opens in Bridgeport!</div>
           <div class="news-text">We're thrilled to bring the authentic taste of Brazilian açaí to Bridgeport, CT! Come visit us at 666 Brooklawn Ave and try our signature bowls, bottles and more!</div>
-          <div class="news-tags"><span class="news-tag">🎉 Grand Opening</span><span class="news-tag">📍 Bridgeport</span></div>
+          <div class="news-tags"><span class="news-tag">&#127881; Grand Opening</span><span class="news-tag">📍 Bridgeport</span></div>
         </div>
       </div>
       <div class="news-grid">
@@ -439,7 +439,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
   <div class="modal">
     <div class="modal-head"><span class="modal-title" id="bName">Burger</span><button class="close-x" onclick="document.getElementById('burgerOv').classList.remove('open')">✕</button></div>
     <div style="font-size:12px;color:#b07050;margin-bottom:16px;" id="bDesc"></div>
-    <div style="font-size:13px;font-weight:800;color:var(--brown);margin-bottom:10px;" id="burgerExtrasLbl">➕ Add extras?</div>
+    <div style="font-size:13px;font-weight:800;color:var(--brown);margin-bottom:10px;" id="burgerExtrasLbl">&#10133; Add extras?</div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
       <div class="chip" onclick="togExtra(this,'Extra Beef',3)">🥩 Extra Beef +$3</div>
       <div class="chip" onclick="togExtra(this,'Bacon',2)">🥓 Bacon +$2</div>
@@ -506,20 +506,20 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
       <div id="influencerMsg" style="font-size:13px;font-weight:700;margin-bottom:12px;min-height:16px;"></div>
       <label class="flabel" id="payMethodLbl" style="margin-bottom:8px">Payment method</label>
       <div class="pay-toggle">
-        <button class="pay-opt sel" id="pCard" onclick="setPayM('card')">💳 Card</button>
-        <button class="pay-opt" id="pCash" onclick="setPayM('cash')">💵 Cash</button>
-        <button class="pay-opt" id="pVenmo" onclick="setPayM('venmo')">💙 Venmo</button>
-        <button class="pay-opt" id="pZelle" onclick="setPayM('zelle')">💜 Zelle</button>
+        <button class="pay-opt sel" id="pCard" onclick="setPayM('card')">&#128179; Card</button>
+        <button class="pay-opt" id="pCash" onclick="setPayM('cash')">&#128181; Cash</button>
+        <button class="pay-opt" id="pVenmo" onclick="setPayM('venmo')">&#128153; Venmo</button>
+        <button class="pay-opt" id="pZelle" onclick="setPayM('zelle')">&#128156; Zelle</button>
       </div>
       <div id="cardWrap" style="margin-bottom:12px;">
         <label class="flabel" id="cardLbl">Card details</label>
         <div id="card-element" style="padding:11px 14px;border:1.5px solid #f0d0b8;border-radius:12px;background:white;"></div>
         <div id="card-errors" style="color:#c2185b;font-size:12px;margin-top:6px;min-height:16px;"></div>
       </div>
-      <div class="info-box info-cash" id="infoCash">💵 Pay cash to the driver or at the counter. Have exact change ready! 😊</div>
-      <div class="info-box info-venmo" id="infoVenmo">💙 Send to <b>@grazysacai</b> on Venmo. Use your order # as the note. We'll confirm before preparing!</div>
-      <div class="info-box info-zelle" id="infoZelle">💜 Send to <b>(203) 726-4127</b> on Zelle. Use your order # as the note. We'll confirm before preparing!</div>
-      <button class="pay-btn" id="payBtn" onclick="checkout()"><span id="payBtnTxt">💳 Pay with Card</span> · <span id="payAmt">$0.00</span></button>
+      <div class="info-box info-cash" id="infoCash">&#128181; Pay cash to the driver or at the counter. Have exact change ready! 😊</div>
+      <div class="info-box info-venmo" id="infoVenmo">&#128153; Send to <b>@grazysacai</b> on Venmo. Use your order # as the note. We'll confirm before preparing!</div>
+      <div class="info-box info-zelle" id="infoZelle">&#128156; Send to <b>(203) 726-4127</b> on Zelle. Use your order # as the note. We'll confirm before preparing!</div>
+      <button class="pay-btn" id="payBtn" onclick="checkout()"><span id="payBtnTxt">&#128179; Pay with Card</span> · <span id="payAmt">$0.00</span></button>
       <div class="pay-note" id="payNote">🔒 Powered by Stripe · 0% commission</div>
     </div>
   </div>
@@ -623,12 +623,12 @@ var TRANSLATIONS = {
     addToCart:"Add to Cart", orderPlaced:"Order placed!",
     backToMenu:"Back to menu", etaMsg:"We'll call",
     selectCity:"— Select city —", emptyCart:"Your cart is empty — add something delicious!",
-    subtotal:"Subtotal", total:"Total", free:"FREE 🎉", noFee:"No fee",
+    subtotal:"Subtotal", total:"Total", free:"FREE &#127881;", noFee:"No fee",
     selectYourCity:"Select your city", processing:"Processing…",
     freeDelivery:"more for free delivery!",
     indOrCombo:"Individual or Combo? (Combo = + fries + drink)",
     individual:"🌭 Individual", combo:"🍟 Combo",
-    extras:"➕ Add extras?", sizeStep:"Step 1 — Size",
+    extras:"&#10133; Add extras?", sizeStep:"Step 1 — Size",
     plateDayDesc:"Ask us what's cooking today!",
     sodaName:"Soda", sodaDesc:"Coke, Sprite, Water...",
     juiceName:"Fruit Juice", juiceDesc:"Natural pulp juice"
@@ -669,12 +669,12 @@ var TRANSLATIONS = {
     addToCart:"Adicionar ao Carrinho", orderPlaced:"Pedido realizado!",
     backToMenu:"Voltar ao menu", etaMsg:"Ligaremos para",
     selectCity:"— Selecione a cidade —", emptyCart:"Seu carrinho está vazio — adicione algo delicioso!",
-    subtotal:"Subtotal", total:"Total", free:"GRÁTIS 🎉", noFee:"Sem taxa",
+    subtotal:"Subtotal", total:"Total", free:"GRÁTIS &#127881;", noFee:"Sem taxa",
     selectYourCity:"Selecione sua cidade", processing:"Processando…",
     freeDelivery:"para entrega grátis!",
     indOrCombo:"Individual ou Combo? (Combo = + batata + refrigerante)",
     individual:"🌭 Individual", combo:"🍟 Combo",
-    extras:"➕ Adicionar extras?", sizeStep:"Passo 1 — Tamanho",
+    extras:"&#10133; Adicionar extras?", sizeStep:"Passo 1 — Tamanho",
     plateDayDesc:"Pergunte o prato de hoje!",
     sodaName:"Refrigerante", sodaDesc:"Coca, Sprite, Água...",
     juiceName:"Suco de Polpa", juiceDesc:"Suco natural de polpa"
@@ -752,8 +752,8 @@ function applyTranslations(){
   var cind=document.getElementById('cInd'); if(cind)cind.textContent=tr.individual;
   var ccom=document.getElementById('cCombo'); if(ccom)ccom.textContent=tr.combo;
   // Pay buttons
-  var pCard=document.getElementById('pCard'); if(pCard)pCard.textContent='💳 '+(lang==='pt'?'Cartão':'Card');
-  var pCash=document.getElementById('pCash'); if(pCash)pCash.textContent='💵 '+(lang==='pt'?'Dinheiro':'Cash');
+  var pCard=document.getElementById('pCard'); if(pCard)pCard.textContent='&#128179; '+(lang==='pt'?'Cartão':'Card');
+  var pCash=document.getElementById('pCash'); if(pCash)pCash.textContent='&#128181; '+(lang==='pt'?'Dinheiro':'Cash');
   // Builder button
   var bab=document.getElementById('builderAddBtn'); if(bab)bab.innerHTML='🛒 '+tr.addToCart+' — $<span id="bPrice">'+acaiSz.price.toFixed(2)+'</span>';
   // selected count text
@@ -784,7 +784,7 @@ var tableNumber = null;
   document.addEventListener('DOMContentLoaded', function(){
     var banner = document.createElement('div');
     banner.style.cssText = 'background:#5c2a0e;color:#fde68a;text-align:center;padding:12px 16px;font-family:Nunito,sans-serif;font-size:13px;font-weight:800;';
-    banner.innerHTML = '🍽️ Table <b>' + t + '</b> &nbsp;·&nbsp; Sit & order! &nbsp;·&nbsp; 🫐 <b>+50 bonus pts</b> &nbsp;·&nbsp; 💸 <b>5% off</b> first scan!';
+    banner.innerHTML = '&#127869; Table <b>' + t + '</b> &nbsp;·&nbsp; Sit & order! &nbsp;·&nbsp; 🫐 <b>+50 bonus pts</b> &nbsp;·&nbsp; 💸 <b>5% off</b> first scan!';
     document.body.insertBefore(banner, document.body.firstChild);
   });
 })();
@@ -833,7 +833,7 @@ function openCart(){
   // For table/QR orders: hide delivery, show only dine in
   if(tableNumber){
     document.getElementById('btnDel').style.display='none';
-    document.getElementById('btnPick').textContent='🍽️ Dine In — Table '+tableNumber;
+    document.getElementById('btnPick').textContent='&#127869; Dine In — Table '+tableNumber;
     document.getElementById('addrWrap').style.display='none';
     orderType='pickup';
     document.getElementById('btnDel').classList.remove('sel');
@@ -850,7 +850,7 @@ function renderCart(){
   var feeHtml='';
   if(orderType==='delivery'){
     if(!zone)feeHtml='<div class="sum-row"><span>Delivery fee</span><span style="color:#b07050">Select your city</span></div>';
-    else if(f===0)feeHtml='<div class="sum-row"><span>Delivery fee</span><span class="free-tag">FREE 🎉</span></div>';
+    else if(f===0)feeHtml='<div class="sum-row"><span>Delivery fee</span><span class="free-tag">FREE &#127881;</span></div>';
     else{var rem=(zone.free-s).toFixed(2);feeHtml='<div class="sum-row"><span>Delivery fee</span><span>$'+f.toFixed(2)+'</span></div>'+(rem>0?'<div class="sum-row"><span style="color:var(--green);font-size:11px">Add $'+rem+' more for free delivery!</span></div>':'');}
   }else{feeHtml='<div class="sum-row"><span>Pickup</span><span>No fee</span></div>';}
   var discLabel = appliedInfluencerCode ? (appliedInfluencerCode.type==='platinum'?'Free items (Platinum)':'Promo: '+appliedInfluencerCode.code) : '';
@@ -869,8 +869,8 @@ function setPayM(m){
   document.getElementById('infoCash').style.display=m==='cash'?'block':'none';
   document.getElementById('infoVenmo').style.display=m==='venmo'?'block':'none';
   document.getElementById('infoZelle').style.display=m==='zelle'?'block':'none';
-  var btnTxt={card:'💳 Pay with Card',cash:'💵 Confirm Order (Cash)',venmo:'💙 Confirm Order (Venmo)',zelle:'💜 Confirm Order (Zelle)'};
-  var notesTxt={card:'🔒 Powered by Stripe · 0% commission',cash:'💵 Pay cash on delivery or at counter',venmo:'💙 Send to @grazysacai on Venmo — use order # as note',zelle:'💜 Send to (203) 726-4127 on Zelle — use order # as note'};
+  var btnTxt={card:'&#128179; Pay with Card',cash:'&#128181; Confirm Order (Cash)',venmo:'&#128153; Confirm Order (Venmo)',zelle:'&#128156; Confirm Order (Zelle)'};
+  var notesTxt={card:'🔒 Powered by Stripe · 0% commission',cash:'&#128181; Pay cash on delivery or at counter',venmo:'&#128153; Send to @grazysacai on Venmo — use order # as note',zelle:'&#128156; Send to (203) 726-4127 on Zelle — use order # as note'};
   document.getElementById('payBtnTxt').textContent=btnTxt[m];document.getElementById('payNote').textContent=notesTxt[m];
 }
 function initStripe(){if(stripeReady||typeof Stripe==='undefined')return;try{stripe=Stripe(STRIPE_PK);var els=stripe.elements();cardEl=els.create('card',{style:{base:{fontFamily:'Nunito,sans-serif',fontSize:'15px',color:'#5c2a0e','::placeholder':{color:'#c0a090'}},invalid:{color:'#c2185b'}}});cardEl.mount('#card-element');cardEl.on('change',function(e){document.getElementById('card-errors').textContent=e.error?e.error.message:'';});stripeReady=true;}catch(e){console.warn(e);}}
@@ -888,85 +888,99 @@ async function checkout(){
   }
   if(!stripeReady){alert('Card payment not ready. Check Stripe key.');btn.disabled=false;return;}
   var res=await stripe.createPaymentMethod({type:'card',card:cardEl,billing_details:{name:name}});
-  if(res.error){document.getElementById('card-errors').textContent=res.error.message;btn.disabled=false;btn.innerHTML='💳 Pay with Card · $'+getTotal().toFixed(2);return;}
+  if(res.error){document.getElementById('card-errors').textContent=res.error.message;btn.disabled=false;btn.innerHTML='&#128179; Pay with Card · $'+getTotal().toFixed(2);return;}
   try{
     var r=await fetch(BACKEND+'/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentMethodId:res.paymentMethod.id,amountCents:Math.round(getTotal()*100),customerName:name,customerPhone:phone,address:orderType==='delivery'?addr:'PICKUP',notes:notes,orderType:orderType,zone:document.getElementById('zoneSelect').value||null,items:cart.map(function(i){return{name:i.name,price:i.price,qty:i.qty};}),paymentType:'card'})});
     var result=await r.json();
     if(result.success){var amt2=getTotal();cart=[];updBar();showSuccess(result.orderId,phone,'card',amt2);}
-    else{document.getElementById('card-errors').textContent=result.error||'Payment failed.';btn.disabled=false;btn.innerHTML='💳 Pay · $'+getTotal().toFixed(2);}
-  }catch(e){document.getElementById('card-errors').textContent='Connection error.';btn.disabled=false;btn.innerHTML='💳 Pay · $'+getTotal().toFixed(2);}
+    else{document.getElementById('card-errors').textContent=result.error||'Payment failed.';btn.disabled=false;btn.innerHTML='&#128179; Pay · $'+getTotal().toFixed(2);}
+  }catch(e){document.getElementById('card-errors').textContent='Connection error.';btn.disabled=false;btn.innerHTML='&#128179; Pay · $'+getTotal().toFixed(2);}
 }
-async function showSuccess(orderId,phone,payMethod,amount){
+function closeReceipt(){
+  var ov=document.getElementById('overlay');
+  ov.classList.remove('open');
+  ov.style.alignItems='';
+  ov.style.padding='';
+}
+
+async function showSuccess(orderId, phone, payMethod, amount) {
   try {
     var pid = await getPlayerID();
-    if(pid){
+    if (pid) {
       fetch(BACKEND+'/save-player-id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId,playerId:pid,phone})}).catch(function(){});
-      setTimeout(function(){sendOrderNotification(pid,'Order received! 🫐','We got your order #'+orderId+'! We are preparing it now.');},2000);
+      setTimeout(function(){ sendOrderNotification(pid,'Order received! 🫐','We got your order #'+orderId+'! Preparing now.'); }, 2000);
     }
-  } catch(e){}
+  } catch(e) {}
 
-  // Build receipt items
-  var itemsHtml = '';
-  var receiptItems = cart.slice(); // save before clearing
-  receiptItems.forEach(function(item){
-    itemsHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #fce7d6;font-size:13px;">' +
-      '<span style="color:#5c2a0e;font-weight:600;">' + (item.qty>1?item.qty+'x ':'') + item.name + (item.toppings?'<br><span style="font-size:11px;color:#b07050;">'+item.toppings+'</span>':'') + '</span>' +
-      '<span style="font-weight:800;color:#5c2a0e;">$'+(item.price*item.qty).toFixed(2)+'</span></div>';
-  });
-
+  var savedCart = cart.slice();
   closeCart();
-
-  var paymentHtml = '';
-  if(payMethod==='venmo') paymentHtml = '<div style="background:#e8f4fd;border:1.5px solid #93c5fd;border-radius:12px;padding:14px;margin:12px 0;text-align:left;">' +
-    '<div style="font-size:13px;font-weight:800;color:#1d4ed8;margin-bottom:6px;">💙 Pay with Venmo</div>' +
-    '<div style="font-size:13px;color:#1d4ed8;">Send <b>$'+amount.toFixed(2)+'</b> to <b>@grazysacai</b></div>' +
-    '<div style="font-size:12px;color:#1d4ed8;margin-top:4px;">Note: <b>Order #'+orderId+'</b></div></div>';
-  if(payMethod==='zelle') paymentHtml = '<div style="background:#f3e8ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:14px;margin:12px 0;text-align:left;">' +
-    '<div style="font-size:13px;font-weight:800;color:#6d28d9;margin-bottom:6px;">💜 Pay with Zelle</div>' +
-    '<div style="font-size:13px;color:#6d28d9;">Send <b>$'+amount.toFixed(2)+'</b> to <b>(203) 726-4127</b></div>' +
-    '<div style="font-size:12px;color:#6d28d9;margin-top:4px;">Note: <b>Order #'+orderId+'</b></div></div>';
-  if(payMethod==='card') paymentHtml = '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">💳 Card payment confirmed!</div>';
-  if(payMethod==='cash') paymentHtml = '<div style="background:#fefce8;border:1.5px solid #fde047;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#854d0e;font-weight:700;">💵 Pay with cash on delivery/pickup</div>';
-
-  var tableMsg = tableNumber ? '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">🍽️ Bringing to Table '+tableNumber+' · +50 bonus points!</div>' : '';
 
   var now = new Date();
   var dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
 
-  var ov = document.getElementById('overlay');
-  ov.innerHTML = '<div id="receiptBox" style="background:white;border-radius:20px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;margin:auto;">' +
-    // Header
-    '<div style="text-align:center;margin-bottom:16px;">' +
-      '<div style="font-size:48px;">🎉</div>' +
-      '<div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-top:8px;">Order Confirmed!</div>' +
-      '<div style="font-size:13px;color:#b07050;margin-top:4px;">'+(tableNumber?'Bringing to Table '+tableNumber:'ETA: 30-45 min · We will call '+phone)+'</div>' +
-    '</div>' +
-    // Receipt
-    '<div style="border:1.5px solid #fce7d6;border-radius:14px;padding:16px;margin-bottom:12px;">' +
-      '<div style="display:flex;justify-content:space-between;margin-bottom:10px;">' +
-        '<div style="font-size:11px;font-weight:800;color:#b07050;text-transform:uppercase;">Order #'+orderId+'</div>' +
-        '<div style="font-size:11px;color:#b07050;">'+dateStr+'</div>' +
-      '</div>' +
-      itemsHtml +
-      '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:15px;font-weight:900;color:#5c2a0e;margin-top:4px;">' +
-        '<span>Total</span><span>$'+amount.toFixed(2)+'</span>' +
-      '</div>' +
-    '</div>' +
-    tableMsg +
-    paymentHtml +
-    // Download button
-    '<button onclick="downloadReceipt(''+orderId+'',''+dateStr+'')" style="width:100%;padding:13px;background:#fff9f4;border:1.5px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:800;color:#5c2a0e;cursor:pointer;margin-bottom:10px;">📄 Download Receipt</button>' +
-    // Back button
-    '<button onclick="document.getElementById('overlay').classList.remove('open');document.getElementById('overlay').style.alignItems='';" style="width:100%;padding:13px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Back to menu</button>' +
-    (tableNumber?'<br><button onclick="document.getElementById('overlay').classList.remove('open')" style="width:100%;padding:12px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">➕ Order More</button>':'') +
-  '</div>';
+  var itemsHtml = '';
+  savedCart.forEach(function(item) {
+    itemsHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #fce7d6;font-size:13px;">';
+    itemsHtml += '<span style="color:#5c2a0e;font-weight:600;">' + (item.qty>1 ? item.qty+'x ' : '') + item.name + '</span>';
+    itemsHtml += '<span style="font-weight:800;color:#5c2a0e;">$' + (item.price*item.qty).toFixed(2) + '</span>';
+    itemsHtml += '</div>';
+  });
 
+  var paymentHtml = '';
+  if (payMethod === 'venmo') {
+    paymentHtml = '<div style="background:#e8f4fd;border:1.5px solid #93c5fd;border-radius:12px;padding:14px;margin:12px 0;">';
+    paymentHtml += '<div style="font-size:13px;font-weight:800;color:#1d4ed8;margin-bottom:4px;">&#128153; Pay with Venmo</div>';
+    paymentHtml += '<div style="font-size:13px;color:#1d4ed8;">Send <b>$' + amount.toFixed(2) + '</b> to <b>@grazysacai</b></div>';
+    paymentHtml += '<div style="font-size:12px;color:#1d4ed8;margin-top:4px;">Note: Order #' + orderId + '</div></div>';
+  } else if (payMethod === 'zelle') {
+    paymentHtml = '<div style="background:#f3e8ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:14px;margin:12px 0;">';
+    paymentHtml += '<div style="font-size:13px;font-weight:800;color:#6d28d9;margin-bottom:4px;">&#128156; Pay with Zelle</div>';
+    paymentHtml += '<div style="font-size:13px;color:#6d28d9;">Send <b>$' + amount.toFixed(2) + '</b> to <b>(203) 726-4127</b></div>';
+    paymentHtml += '<div style="font-size:12px;color:#6d28d9;margin-top:4px;">Note: Order #' + orderId + '</div></div>';
+  } else if (payMethod === 'card') {
+    paymentHtml = '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">&#128179; Card payment confirmed!</div>';
+  } else {
+    paymentHtml = '<div style="background:#fefce8;border:1.5px solid #fde047;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#854d0e;font-weight:700;">&#128181; Pay with cash on delivery/pickup</div>';
+  }
+
+  var tableMsg = '';
+  if (tableNumber) {
+    tableMsg = '<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:#166534;font-weight:700;">&#127869; Bringing to Table ' + tableNumber + ' · +50 bonus points!</div>';
+  }
+
+  var html = '<div id="receiptBox" style="background:white;border-radius:20px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;margin:auto;">';
+  html += '<div style="text-align:center;margin-bottom:16px;"><div style="font-size:48px;">&#127881;</div>';
+  html += '<div style="font-family:Paytone One,sans-serif;font-size:22px;color:#5c2a0e;margin-top:8px;">Order Confirmed!</div>';
+  html += '<div style="font-size:13px;color:#b07050;margin-top:4px;">' + (tableNumber ? 'Bringing to Table '+tableNumber : 'ETA: 30-45 min') + '</div></div>';
+  html += '<div style="border:1.5px solid #fce7d6;border-radius:14px;padding:16px;margin-bottom:12px;">';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:10px;">';
+  html += '<div style="font-size:11px;font-weight:800;color:#b07050;">Order #' + orderId + '</div>';
+  html += '<div style="font-size:11px;color:#b07050;">' + dateStr + '</div></div>';
+  html += itemsHtml;
+  html += '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:15px;font-weight:900;color:#5c2a0e;margin-top:4px;">';
+  html += '<span>Total</span><span>$' + amount.toFixed(2) + '</span></div></div>';
+  html += tableMsg + paymentHtml;
+  html += '<button onclick="downloadReceipt()" style="width:100%;padding:13px;background:#fff9f4;border:1.5px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:800;color:#5c2a0e;cursor:pointer;margin-bottom:10px;">Download Receipt</button>';
+  html += '<button onclick="closeReceipt()" style="width:100%;padding:13px;background:#c2185b;color:white;border:none;border-radius:12px;font-family:Nunito,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Back to menu</button>';
+  if (tableNumber) html += '<button onclick="closeReceipt()" style="width:100%;padding:12px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">Order More</button>';
+  html += '</div>';
+
+  var ov = document.getElementById('overlay');
+  ov.innerHTML = html;
   ov.style.alignItems = 'center';
   ov.style.padding = '16px';
   ov.classList.add('open');
 }
 
-function downloadReceipt(orderId, dateStr) {
+function closeReceipt() {
+  var ov = document.getElementById('overlay');
+  ov.classList.remove('open');
+  ov.style.alignItems = '';
+  ov.style.padding = '';
+}
+
+
+function downloadReceipt(btn) {
   var box = document.getElementById('receiptBox');
   if (!box) return;
   // Create printable version
@@ -977,8 +991,8 @@ function downloadReceipt(orderId, dateStr) {
     '.total{display:flex;justify-content:space-between;font-weight:bold;font-size:16px;margin-top:8px;}' +
     'button{display:none;}</style></head><body>' +
     '<div style="text-align:center;margin-bottom:20px;">' +
-    '<img src="https://grazys-acai.netlify.app/favicon.png" style="width:60px;" onerror="this.style.display='none'"/>' +
-    '<h1>Grazy's Açaí</h1>' +
+    '<img src="https://grazys-acai.netlify.app/favicon.png" style="width:60px;"/>' +
+    '<h1>Grazys Acai</h1>' +
     '<p style="color:#888;">666 Brooklawn Ave, Bridgeport CT<br>(203) 726-4127</p>' +
     '</div>' +
     box.innerHTML +
@@ -1094,7 +1108,7 @@ async function loadDynamicMenus() {
 
       var imgHtml = item.image_url
         ? '<div style="margin:-12px -12px 10px -12px;overflow:hidden;border-radius:10px 10px 0 0;"><img src="' + item.image_url + '" style="width:100%;height:140px;object-fit:cover;display:block;"/></div>'
-        : '<div class="card-img">' + (item.emoji || '🍽️') + '</div>';
+        : '<div class="card-img">' + (item.emoji || '&#127869;') + '</div>';
 
       var price = '$' + parseFloat(item.price).toFixed(0);
       var card = document.createElement('div');
