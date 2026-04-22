@@ -983,196 +983,23 @@ function closeReceipt() {
 }
 
 
-function downloadReceipt(btn) {
+function downloadReceipt() {
   var box = document.getElementById('receiptBox');
-  if (!box) return;
-  // Create printable version
+  if (!box) { alert('No receipt found!'); return; }
   var w = window.open('', '_blank');
-  w.document.write('<html><head><title>Receipt - Order #'+orderId+'</title>' +
-    '<style>body{font-family:Arial,sans-serif;padding:20px;max-width:400px;margin:0 auto;}' +
-    'h1{color:#5c2a0e;font-size:20px;} .item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;}' +
-    '.total{display:flex;justify-content:space-between;font-weight:bold;font-size:16px;margin-top:8px;}' +
-    'button{display:none;}</style></head><body>' +
-    '<div style="text-align:center;margin-bottom:20px;">' +
-    '<img src="https://grazys-acai.netlify.app/favicon.png" style="width:60px;"/>' +
-    '<h1>Grazys Acai</h1>' +
-    '<p style="color:#888;">666 Brooklawn Ave, Bridgeport CT<br>(203) 726-4127</p>' +
-    '</div>' +
-    box.innerHTML +
-    '<script>window.onload=function(){window.print();}<\/script>' +
-    '</body></html>');
+  if (!w) { alert('Please allow popups for this site to download receipt!'); return; }
+  var content = box.innerHTML;
+  w.document.write('<!DOCTYPE html><html><head><title>Grazys Acai - Receipt</title>');
+  w.document.write('<style>');
+  w.document.write('body{font-family:Arial,sans-serif;padding:20px;max-width:420px;margin:0 auto;color:#5c2a0e;}');
+  w.document.write('button{display:none!important;}a{display:none!important;}');
+  w.document.write('</style></head><body>');
+  w.document.write('<div style="text-align:center;margin-bottom:16px;">');
+  w.document.write('<h2 style="color:#5c2a0e;margin:0;">Grazys Acai</h2>');
+  w.document.write('<p style="color:#b07050;margin:4px 0;font-size:13px;">666 Brooklawn Ave, Bridgeport CT<br>(203) 726-4127</p>');
+  w.document.write('</div>');
+  w.document.write(content);
+  w.document.write('<script>window.onload=function(){window.print();}<\/script>');
+  w.document.write('</body></html>');
   w.document.close();
 }
-// Load news from Supabase
-async function loadNews() {
-  var feed = document.getElementById('newsFeed');
-  if (!feed) return;
-  try {
-    var r = await fetch(BACKEND + '/news');
-    var data = await r.json();
-    if (!data.success || !data.posts.length) {
-      feed.innerHTML = '<div style="text-align:center;padding:32px;color:#c0a090;">No news yet — check back soon! 🐶</div>';
-      return;
-    }
-    var featured = data.posts.filter(function(p){return p.featured;});
-    var regular = data.posts.filter(function(p){return !p.featured;});
-    var html = '';
-
-    function buildMedia(p, large) {
-      if (p.image_url) return '<img src="'+p.image_url+'" style="width:100%;height:'+(large?'220':'140')+'px;object-fit:cover;"/>';
-      if (p.video_url) {
-        var yt = p.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-        if (yt) return '<iframe src="https://www.youtube.com/embed/'+yt[1]+'" style="width:100%;height:'+(large?'220':'140')+'px;border:none;" allowfullscreen></iframe>';
-        return '<div style="background:#f5ddd0;height:'+(large?'220':'140')+'px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#b07050;flex-direction:column;gap:8px;"><span style="font-size:32px">🎥</span><a href="'+p.video_url+'" target="_blank" style="color:var(--pink-dark);font-weight:700;">Watch Video</a></div>';
-      }
-      return '<div class="news-img">'+p.emoji+'</div>';
-    }
-
-    featured.forEach(function(p){
-      html += '<div class="news-card featured">' +
-        '<div class="news-badge">🔥 Featured</div>' +
-        buildMedia(p, true) +
-        '<div class="news-body">' +
-          '<div class="news-date">'+p.date_label+'</div>' +
-          '<div class="news-title">'+p.title+'</div>' +
-          '<div class="news-text">'+p.content+'</div>' +
-        '</div></div>';
-    });
-    if(regular.length){
-      html += '<div class="news-grid">';
-      regular.forEach(function(p){
-        html += '<div class="news-card">' +
-          buildMedia(p, false) +
-          '<div class="news-body">' +
-            '<div class="news-date">'+p.date_label+'</div>' +
-            '<div class="news-title">'+p.title+'</div>' +
-            '<div class="news-text">'+p.content.substring(0,100)+'...</div>' +
-          '</div></div>';
-      });
-      html += '</div>';
-    }
-    feed.innerHTML = html;
-  } catch(e) {
-    feed.innerHTML = '<div style="text-align:center;padding:32px;color:#c0a090;">Could not load news. Try again later!</div>';
-  }
-}
-
-// ── DYNAMIC MENU FROM SUPABASE ───────────────────────────
-var menuData = {}; // cache
-
-async function loadMenuSection(category) {
-  if (menuData[category]) return menuData[category];
-  try {
-    var r = await fetch(BACKEND + '/menu?category=' + category);
-    var data = await r.json();
-    if (data.success && data.items.length) {
-      menuData[category] = data.items;
-      return data.items;
-    }
-  } catch(e) {}
-  return null;
-}
-
-function buildMenuCard(item) {
-  var imgHtml = '';
-  if (item.image_url) {
-    imgHtml = '<img src="'+item.image_url+'" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:10px;"/>';
-  }
-  return imgHtml;
-}
-
-// ── DYNAMIC MENU LOADER ──────────────────────────────────
-async function loadDynamicMenus() {
-  try {
-    var r = await fetch(BACKEND + '/menu');
-    var data = await r.json();
-    if (!data.success || !data.items) return;
-
-    var sectionMap = {
-      'smoothies': {gridId:'smoothies-grid', type:'simple'},
-      'burgers':   {gridId:'burgers-grid',   type:'burger'},
-      'hotdogs':   {gridId:'hotdogs-grid',   type:'combo'},
-      'prensados': {gridId:'prensados-grid', type:'simple'},
-      'sides':     {gridId:'sides-grid',     type:'simple'},
-      'drinks':    {gridId:'drinks-grid',    type:'simple'},
-    };
-
-    data.items.forEach(function(item) {
-      var sec = sectionMap[item.category];
-      if (!sec) return;
-      var el = document.getElementById(sec.gridId);
-      if (!el) return;
-
-      // Only replace if we haven't already
-      if (!el.dataset.loaded) {
-        el.innerHTML = '';
-        el.dataset.loaded = '1';
-      }
-
-      var imgHtml = item.image_url
-        ? '<div style="margin:-12px -12px 10px -12px;overflow:hidden;border-radius:10px 10px 0 0;"><img src="' + item.image_url + '" style="width:100%;height:140px;object-fit:cover;display:block;"/></div>'
-        : '<div class="card-img">' + (item.emoji || '&#127869;') + '</div>';
-
-      var price = '$' + parseFloat(item.price).toFixed(0);
-      var card = document.createElement('div');
-      card.className = 'card';
-
-      if (sec.type === 'burger') {
-        var bName = item.name, bPrice = item.price, bDesc = item.description || '';
-        card.onclick = function(){ openBurger(bName, bPrice, bDesc); };
-        card.innerHTML = imgHtml +
-          '<div class="card-body">' +
-            '<div class="card-name">' + item.name + '</div>' +
-            '<div class="card-desc">' + (item.description || '') + '</div>' +
-            '<div class="card-foot"><span class="card-price">' + price + '</span>' +
-            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
-          '</div>';
-        card.querySelector('#btn-' + item.id).onclick = function(e){
-          e.stopPropagation(); openBurger(bName, bPrice, bDesc);
-        };
-      } else if (sec.type === 'combo') {
-        var cName = item.name, cPrice = item.price, cPrice2 = item.price2 || 0;
-        card.onclick = function(){ openCombo(cName, cPrice, cPrice2); };
-        var comboTag = cPrice2 ? ' <span class="combo-tag">Combo $' + parseFloat(cPrice2).toFixed(0) + '</span>' : '';
-        card.innerHTML = imgHtml +
-          '<div class="card-body">' +
-            '<div class="card-name">' + item.name + '</div>' +
-            '<div class="card-desc">' + (item.description || '') + '</div>' +
-            '<div class="card-foot"><span class="card-price">' + price + comboTag + '</span>' +
-            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
-          '</div>';
-        card.querySelector('#btn-' + item.id).onclick = function(e){
-          e.stopPropagation(); openCombo(cName, cPrice, cPrice2);
-        };
-      } else {
-        var sName = item.name, sPrice = item.price;
-        card.onclick = function(){ add(sName, sPrice); };
-        card.innerHTML = imgHtml +
-          '<div class="card-body">' +
-            '<div class="card-name">' + item.name + '</div>' +
-            '<div class="card-desc">' + (item.description || '') + '</div>' +
-            '<div class="card-foot"><span class="card-price">' + price + '</span>' +
-            '<button class="add-btn" id="btn-' + item.id + '">+</button></div>' +
-          '</div>';
-        card.querySelector('#btn-' + item.id).onclick = function(e){
-          e.stopPropagation(); add(sName, sPrice);
-        };
-      }
-      el.appendChild(card);
-    });
-  } catch(e) {
-    console.warn('Menu load error:', e);
-  }
-}
-
-// Load dynamic menus on page load
-window.addEventListener('load', function(){
-  setTimeout(loadDynamicMenus, 500);
-});
-
-function goSec(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');}
-window.addEventListener('scroll',function(){var secs=['acai','bottles','burgers','hotdogs','prensados','sides','drinks'],pills=document.querySelectorAll('.nav-pill'),cur=0;secs.forEach(function(id,i){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});pills.forEach(function(p,i){p.classList.toggle('active',i===cur);});});
-updBuilder();
-</script>
-</body>
-</html>
