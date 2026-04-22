@@ -822,7 +822,8 @@ function getInfluencerDiscount(){
   if(appliedInfluencerCode.discountType==='percent') return parseFloat((sub*appliedInfluencerCode.discount/100).toFixed(2));
   return Math.min(appliedInfluencerCode.discount,sub);
 }
-function getTotal(){return Math.max(0,getSub()+getDFee()-getInfluencerDiscount());}
+function getTax(){return parseFloat((getSub()*0.0635).toFixed(2));}
+function getTotal(){return Math.max(0,getSub()+getDFee()+getTax()-getInfluencerDiscount());}
 function updBar(){var c=cart.reduce(function(s,i){return s+i.qty;},0);document.getElementById('cfCount').textContent=c;document.getElementById('cfTotal').textContent='$'+getTotal().toFixed(2);document.getElementById('cartFloat').classList.toggle('hidden',c===0);}
 function updZone(){var sel=document.getElementById('zoneSelect'),opt=sel.options[sel.selectedIndex];zone=sel.value?{fee:parseFloat(opt.getAttribute('data-fee')),free:parseFloat(opt.getAttribute('data-free'))}:null;renderCart();updBar();}
 function openCart(){
@@ -855,7 +856,9 @@ function renderCart(){
   }else{feeHtml='<div class="sum-row"><span>Pickup</span><span>No fee</span></div>';}
   var discLabel = appliedInfluencerCode ? (appliedInfluencerCode.type==='platinum'?'Free items (Platinum)':'Promo: '+appliedInfluencerCode.code) : '';
   var discHtml=disc>0?'<div class="sum-row"><span>'+discLabel+'</span><span style="color:var(--green)">-$'+disc.toFixed(2)+'</span></div>':'';
-  html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+discHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
+  var tax=getTax();
+  var taxHtml='<div class="sum-row"><span>CT Sales Tax (6.35%)</span><span>$'+tax.toFixed(2)+'</span></div>';
+  html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+taxHtml+discHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
   b.innerHTML=html;document.getElementById('payAmt').textContent='$'+t.toFixed(2);
 }
 function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updBar();renderCart();}
