@@ -123,6 +123,22 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
 .builder-summary{background:var(--cream);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:13px;color:var(--brown);display:none;}
 .builder-add{width:100%;padding:14px;background:var(--pink-dark);color:white;border:none;border-radius:14px;font-family:'Paytone One',sans-serif;font-size:15px;cursor:pointer;margin-top:14px;}
 .builder-add:hover{background:#a0144d;}
+.prato-wrap{background:white;border-radius:20px;border:1.5px solid #fce7d6;padding:20px;max-width:600px;margin:0 auto;}
+.prato-section{margin-bottom:20px;}
+.prato-section-title{font-family:'Paytone One',sans-serif;font-size:15px;color:var(--brown);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.prato-badge{background:var(--pink-dark);color:white;border-radius:10px;padding:2px 10px;font-size:11px;font-family:'Nunito',sans-serif;font-weight:800;}
+.prato-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.prato-item{border:2px solid #fce7d6;border-radius:12px;padding:12px;cursor:pointer;transition:all .2s;text-align:center;background:var(--cream);}
+.prato-item.sel{border-color:var(--pink-dark);background:#ffeef5;}
+.prato-item.disabled{opacity:0.4;cursor:not-allowed;}
+.prato-item-emoji{font-size:24px;margin-bottom:4px;}
+.prato-item-name{font-size:12px;font-weight:800;color:var(--brown);}
+.prato-includes{background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:#166534;font-weight:600;}
+.prato-add-btn{width:100%;padding:14px;background:var(--pink-dark);color:white;border:none;border-radius:14px;font-family:'Paytone One',sans-serif;font-size:16px;cursor:pointer;margin-top:8px;}
+.prato-add-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.sat-special{background:linear-gradient(135deg,#1a0a2e,#2d1b69);border-radius:16px;padding:20px;margin-top:16px;color:white;}
+.sat-title{font-family:'Paytone One',sans-serif;font-size:18px;color:#fde68a;margin-bottom:12px;}
+.sat-item{background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
 .combo-tag{background:#fef3c7;color:#92400e;border-radius:6px;padding:2px 6px;font-size:10px;font-weight:800;margin-left:4px;}
 .cart-float{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--brown);color:white;border-radius:50px;padding:14px 24px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 30px rgba(92,42,14,0.35);cursor:pointer;z-index:40;min-width:280px;justify-content:space-between;transition:opacity .2s,transform .2s;}
 .cart-float.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(20px);}
@@ -217,6 +233,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
   <div class="nav-scroll">
     <button class="nav-pill active" onclick="goSec('acai',this)">🫐 Açaí</button>
     <button class="nav-pill" onclick="goSec('bottles',this)">🥤 Smoothie Collection</button>
+    <button class="nav-pill" onclick="goSec('prato',this);loadDailySpecial()">🍽️ Especial do Dia</button>
     <button class="nav-pill" onclick="goSec('burgers',this)">🍔 Burgers</button>
     <button class="nav-pill" onclick="goSec('hotdogs',this)">🌭 Hot Dogs Dock</button>
     <button class="nav-pill" onclick="goSec('prensados',this)">🥪 Prensados</button>
@@ -307,6 +324,15 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
     <div class="card" onclick="add('Limon Fresh',14)"><div class="card-img">🍋</div><div class="card-body"><div class="card-name">Limon Fresh</div><div class="card-desc">Açaí trufado com creme cremoso de limão</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Limon Fresh',14)">+</button></div></div></div>
     <div class="card" onclick="add('Coco Bliss',14)"><div class="card-img">🥥</div><div class="card-body"><div class="card-name">Coco Bliss</div><div class="card-desc">Açaí trufado com creme natural de coco</div><div class="card-foot"><span class="card-price">$14</span><button class="add-btn" onclick="event.stopPropagation();add('Coco Bliss',14)">+</button></div></div></div>
     <div class="card" onclick="add('Fit Bottle',15)"><div class="card-img">💪</div><div class="card-body"><div class="card-name">Fit</div><div class="card-desc">Batido com whey, frutas e peanut butter</div><div class="card-foot"><span class="card-price">$15</span><button class="add-btn" onclick="event.stopPropagation();add('Fit Bottle',15)">+</button></div></div></div>
+  </div>
+</div>
+
+<!-- PRATO DO DIA -->
+<div class="menu-section" id="prato">
+  <div class="sec-title" id="pratoTitle">🍽️ Especial do Dia</div>
+  <div class="sec-sub" id="pratoSub">Arroz, feijão + escolha suas proteínas e acompanhamentos!</div>
+  <div id="pratoContent">
+    <div style="text-align:center;padding:40px;color:#b07050;">Loading...</div>
   </div>
 </div>
 
@@ -860,7 +886,7 @@ function renderCart(){
   var tax=getTax();
   var taxHtml='<div class="sum-row"><span>CT Sales Tax (6.35%)</span><span>$'+tax.toFixed(2)+'</span></div>';
   html+='<div style="margin-top:4px"><div class="sum-row"><span>Subtotal</span><span>$'+s.toFixed(2)+'</span></div>'+feeHtml+taxHtml+discHtml+'<div class="sum-total"><span>Total</span><span>$'+t.toFixed(2)+'</span></div></div>';
-  b.innerHTML=html;document.getElementById('payAmt').textContent='$'+t.toFixed(2);
+  b.innerHTML=html;var pa=document.getElementById('payAmt');if(pa)pa.textContent='$'+t.toFixed(2);
 }
 function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updBar();renderCart();}
 function setType(t){orderType=t;document.getElementById('btnDel').classList.toggle('sel',t==='delivery');document.getElementById('btnPick').classList.toggle('sel',t==='pickup');document.getElementById('addrWrap').style.display=t==='delivery'?'block':'none';updBar();renderCart();}
@@ -1062,6 +1088,175 @@ async function loadDynamicMenus() {
       el.appendChild(card);
     });
   } catch(e) { console.warn('Menu load error:', e); }
+}
+
+// ── PRATO DO DIA ──────────────────────────────────────────
+var pratoState = { meats: [], sides: [] };
+var pratoData = null;
+
+async function loadDailySpecial() {
+  var container = document.getElementById('pratoContent');
+  if (!container) return;
+  
+  try {
+    var r = await fetch(BACKEND + '/daily-special');
+    var data = await r.json();
+    if (!data.success || !data.special) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#b07050;">Not available today</div>';
+      return;
+    }
+    
+    pratoData = data.special;
+    pratoState = { meats: [], sides: [] };
+    
+    if (!pratoData.available) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#b07050;">&#128274; Especial do Dia not available today</div>';
+      return;
+    }
+
+    var isSaturday = new Date().getDay() === 6;
+    var lang = document.documentElement.lang || 'en';
+    var isPt = document.getElementById('langBtn') ? document.getElementById('langBtn').textContent.includes('PT') : false;
+
+    var meats = Array.isArray(pratoData.meats) ? pratoData.meats : JSON.parse(pratoData.meats || '[]');
+    var sides = Array.isArray(pratoData.sides) ? pratoData.sides : JSON.parse(pratoData.sides || '[]');
+    var satItems = Array.isArray(pratoData.saturday_items) ? pratoData.saturday_items : JSON.parse(pratoData.saturday_items || '[]');
+    var extraItems = Array.isArray(pratoData.extra_items) ? pratoData.extra_items : JSON.parse(pratoData.extra_items || '[]');
+    var price = parseFloat(pratoData.price || 17);
+
+    var meatEmojis = {'Grilled Chicken':'🍗','Steak':'🥩','Fried Tilapia':'🐟','Beef Stew':'🍖','BBQ Ribs':'🍖','Feijoada':'🫘','Brazilian Strogonoff':'🍝'};
+    var sideEmojis = {'Salad':'🥗','Fries':'🍟','Farofa':'🌾','Vinagrete':'🍅','Pasta':'🍝','Steamed Vegetables':'🥦','Smashed Potatoes':'🥔'};
+
+    var html = '<div class="prato-wrap" id="pratoWrap">';
+    
+    // Includes
+    html += '<div class="prato-includes">&#127869; Includes: <b>White Rice + Beans</b> · Choose 2 proteins + 3 sides · <b>$' + price.toFixed(0) + '</b></div>';
+    
+    // Meats
+    html += '<div class="prato-section">';
+    html += '<div class="prato-section-title">&#127831; Choose 2 Proteins <span class="prato-badge" id="meatCount">0/2</span></div>';
+    html += '<div class="prato-grid" id="meatGrid">';
+    meats.forEach(function(meat) {
+      var emoji = meatEmojis[meat] || '&#127831;';
+      html += '<div class="prato-item" data-item="' + meat + '" data-type="meat">';
+      html += '<div class="prato-item-emoji">' + emoji + '</div>';
+      html += '<div class="prato-item-name">' + meat + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+    
+    // Sides
+    html += '<div class="prato-section">';
+    html += '<div class="prato-section-title">&#127803; Choose 3 Sides <span class="prato-badge" id="sideCount">0/3</span></div>';
+    html += '<div class="prato-grid" id="sideGrid">';
+    sides.forEach(function(side) {
+      var emoji = sideEmojis[side] || '&#127803;';
+      html += '<div class="prato-item" data-item="' + side + '" data-type="side">';
+      html += '<div class="prato-item-emoji">' + emoji + '</div>';
+      html += '<div class="prato-item-name">' + side + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    // Extra items if any
+    if (extraItems.length) {
+      html += '<div class="prato-section">';
+      html += '<div class="prato-section-title">&#11088; Today Extras</div>';
+      html += '<div class="prato-grid">';
+      extraItems.forEach(function(item) {
+        html += '<div class="prato-item" data-item="' + item + '" data-type="meat">';
+        html += '<div class="prato-item-emoji">&#11088;</div>';
+        html += '<div class="prato-item-name">' + item + '</div>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    // Add to cart button
+    html += '<button class="prato-add-btn" id="pratoAddBtn" onclick="addPrato()" disabled>Select your proteins & sides first</button>';
+    html += '</div>';
+
+    // Saturday special
+    if (isSaturday && pratoData.saturday_available && satItems.length) {
+      html += '<div class="sat-special">';
+      html += '<div class="sat-title">&#127463;&#127479; Saturday Specials</div>';
+      satItems.forEach(function(item) {
+        var emoji = meatEmojis[item] || '&#11088;';
+        html += '<div class="sat-item">';
+        html += '<div><div style="font-weight:800;font-size:15px;">' + emoji + ' ' + item + '</div>';
+        html += '<div style="font-size:12px;color:rgba(255,255,255,0.6);">Saturday only!</div></div>';
+        html += '<button class="sat-add-btn" data-item="' + item + '" data-price="' + price + '" style="padding:8px 16px;background:var(--pink-dark);color:white;border:none;border-radius:10px;font-weight:800;cursor:pointer;">' + price.toFixed(0) + ' +</button>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+    // Add click handlers via event delegation
+    var wrap = document.getElementById('pratoWrap');
+    if (wrap) {
+      wrap.addEventListener('click', function(e) {
+        var item = e.target.closest('.prato-item');
+        if (item) {
+          var type = item.getAttribute('data-type');
+          var name = item.getAttribute('data-item');
+          togPrato(item, type, name);
+          return;
+        }
+        var satBtn = e.target.closest('.sat-add-btn');
+        if (satBtn) {
+          add(satBtn.getAttribute('data-item'), parseFloat(satBtn.getAttribute('data-price')));
+        }
+      });
+    }
+  } catch(e) {
+    console.warn('Daily special error:', e);
+    if (container) container.innerHTML = '<div style="text-align:center;padding:40px;color:#b07050;">Could not load daily special</div>';
+  }
+}
+
+function togPrato(el, type, item) {
+  if (el.classList.contains('disabled')) return;
+  var maxSel = type === 'meat' ? 2 : 3;
+  var arr = pratoState[type === 'meat' ? 'meats' : 'sides'];
+  
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    var idx = arr.indexOf(item);
+    if (idx > -1) arr.splice(idx, 1);
+    // Re-enable all items of this type
+    document.querySelectorAll('.prato-item[data-type="' + type + '"]').forEach(function(i){ i.classList.remove('disabled'); });
+  } else {
+    if (arr.length >= maxSel) return;
+    el.classList.add('sel');
+    arr.push(item);
+    if (arr.length >= maxSel) {
+      document.querySelectorAll('.prato-item[data-type="' + type + '"]:not(.sel)').forEach(function(i){ i.classList.add('disabled'); });
+    }
+  }
+  
+  // Update counters
+  var mCount = document.getElementById('meatCount');
+  var sCount = document.getElementById('sideCount');
+  if (mCount) mCount.textContent = pratoState.meats.length + '/2';
+  if (sCount) sCount.textContent = pratoState.sides.length + '/3';
+  
+  // Update button
+  var btn = document.getElementById('pratoAddBtn');
+  if (!btn) return;
+  var ready = pratoState.meats.length === 2 && pratoState.sides.length === 3;
+  btn.disabled = !ready;
+  btn.textContent = ready ? 'Add to Cart — $' + parseFloat(pratoData.price||17).toFixed(0) : 'Select ' + (2-pratoState.meats.length) + ' protein(s) + ' + (3-pratoState.sides.length) + ' side(s)';
+}
+
+function addPrato() {
+  if (pratoState.meats.length < 2 || pratoState.sides.length < 3) return;
+  var desc = 'Proteins: ' + pratoState.meats.join(', ') + ' | Sides: ' + pratoState.sides.join(', ');
+  var price = parseFloat(pratoData.price || 17);
+  add('Prato do Dia', price, desc);
+  // Reset
+  pratoState = { meats: [], sides: [] };
+  loadDailySpecial();
 }
 
 function goSec(id,btn){
