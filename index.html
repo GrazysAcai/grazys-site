@@ -844,6 +844,7 @@ function openCart(){
 function closeCart(){document.getElementById('overlay').classList.remove('open');}
 function renderCart(){
   var b=document.getElementById('cartBody');
+  if(!b) return;
   if(!cart.length){b.innerHTML='<div class="empty-cart"><span>🛒</span>Your cart is empty — add something delicious!</div>';document.getElementById('payAmt').textContent='$0.00';return;}
   var html='';
   cart.forEach(function(item,i){html+='<div class="ci"><div><div class="ci-name">'+item.name+'</div>'+(item.sub?'<div class="ci-sub">'+item.sub+'</div>':'')+'<div class="ci-price">$'+(item.price*item.qty).toFixed(2)+'</div></div><div class="ci-qty"><button class="qb" onclick="chg('+i+',-1)">−</button><span class="ci-num">'+item.qty+'</span><button class="qb" onclick="chg('+i+',1)">+</button></div></div>';});
@@ -900,10 +901,8 @@ async function checkout(){
   }catch(e){document.getElementById('card-errors').textContent='Connection error.';btn.disabled=false;btn.innerHTML='&#128179; Pay · $'+getTotal().toFixed(2);}
 }
 function closeReceipt(){
-  var ov=document.getElementById('overlay');
-  ov.classList.remove('open');
-  ov.style.alignItems='';
-  ov.style.padding='';
+  var rm = document.getElementById('receiptModal');
+  if (rm) rm.style.display = 'none';
 }
 
 async function showSuccess(orderId, phone, payMethod, amount) {
@@ -968,11 +967,19 @@ async function showSuccess(orderId, phone, payMethod, amount) {
   if (tableNumber) html += '<button onclick="closeReceipt()" style="width:100%;padding:12px;background:#fff9f4;color:#5c2a0e;border:2px solid #fce7d6;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">Order More</button>';
   html += '</div>';
 
+  // Show receipt in a separate modal, not the cart overlay
+  var receiptModal = document.getElementById('receiptModal');
+  if (!receiptModal) {
+    receiptModal = document.createElement('div');
+    receiptModal.id = 'receiptModal';
+    receiptModal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    document.body.appendChild(receiptModal);
+  }
+  receiptModal.innerHTML = html;
+  receiptModal.style.display = 'flex';
+  // Close cart overlay
   var ov = document.getElementById('overlay');
-  ov.innerHTML = html;
-  ov.style.alignItems = 'center';
-  ov.style.padding = '16px';
-  ov.classList.add('open');
+  ov.classList.remove('open');
 }
 
 function closeReceipt() {
@@ -984,7 +991,7 @@ function closeReceipt() {
 
 
 function downloadReceipt() {
-  var box = document.getElementById('receiptBox');
+  var box = document.getElementById('receiptBox') || document.querySelector('#receiptModal > div');
   if (!box) { alert('No receipt found!'); return; }
   var w = window.open('', '_blank');
   if (!w) { alert('Please allow popups for this site to download receipt!'); return; }
