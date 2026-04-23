@@ -728,7 +728,7 @@ function applyTranslations(){
   if(zf[2])zf[2].textContent=tr.freeOver45;
   // Nav pills
   var pills=document.querySelectorAll('.nav-pill');
-  var navKeys=['🫐 Açaí','🥤 Smoothie Collection',tr.burgerTitle,'🌭 Hot Dogs Dock',tr.prensadosTitle,tr.sidesTitle,tr.drinksTitle];
+  var navKeys=['🫐 Açaí','🥤 Smoothie Collection', lang==='pt'?'🍽️ Especial do Dia':'🍽️ Daily Special', tr.burgerTitle,'🌭 Hot Dogs Dock',tr.prensadosTitle,tr.sidesTitle,tr.drinksTitle,lang==='pt'?'📰 Notícias':'📰 News & Events'];
   pills.forEach(function(p,i){if(navKeys[i])p.textContent=navKeys[i];});
   // Section titles
   var st=document.getElementById('acaiSecTitle'); if(st)st.textContent=tr.acaiTitle;
