@@ -1129,8 +1129,15 @@ async function loadDailySpecial() {
 
     var html = '<div class="prato-wrap" id="pratoWrap">';
     
-    // Includes
-    html += '<div class="prato-includes">&#127869; Includes: <b>White Rice + Beans</b> · Choose 2 proteins + 3 sides · <b>$' + price.toFixed(0) + '</b></div>';
+    // Includes with toggles
+    html += '<div class="prato-includes">';
+    html += '<div style="font-weight:800;margin-bottom:8px;">&#127869; Base — $' + price.toFixed(0) + '</div>';
+    html += '<div style="display:flex;gap:10px;flex-wrap:wrap;">';
+    html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;"><input type="checkbox" id="wantRice" checked style="width:16px;height:16px;cursor:pointer;"> White Rice</label>';
+    html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;"><input type="checkbox" id="wantBeans" checked style="width:16px;height:16px;cursor:pointer;"> Beans</label>';
+    html += '</div>';
+    html += '<div style="font-size:11px;color:#16a34a;margin-top:6px;">Choose 2 proteins + 3 sides</div>';
+    html += '</div>';
     
     // Meats
     html += '<div class="prato-section">';
@@ -1170,6 +1177,10 @@ async function loadDailySpecial() {
     }
 
     // Add to cart button
+    html += '<div style="margin-top:12px;">';
+    html += '<label style="font-size:12px;font-weight:800;color:#b07050;text-transform:uppercase;display:block;margin-bottom:4px;">&#128203; Special Instructions (optional)</label>';
+    html += '<input id="pratoNotes" type="text" placeholder="e.g. No onion on steak, extra farofa..." style="width:100%;padding:10px;border:1.5px solid #fce7d6;border-radius:10px;font-family:Nunito,sans-serif;font-size:13px;color:#5c2a0e;">';
+    html += '</div>';
     html += '<button class="prato-add-btn" id="pratoAddBtn" onclick="addPrato()" disabled>Select your proteins & sides first</button>';
     html += '</div>';
 
@@ -1248,10 +1259,17 @@ function togPrato(el, type, item) {
 
 function addPrato() {
   if (pratoState.meats.length < 2 || pratoState.sides.length < 3) return;
-  var desc = 'Proteins: ' + pratoState.meats.join(', ') + ' | Sides: ' + pratoState.sides.join(', ');
+  var rice = document.getElementById('wantRice');
+  var beans = document.getElementById('wantBeans');
+  var notes = document.getElementById('pratoNotes');
+  var base = [];
+  if (rice && rice.checked) base.push('Rice');
+  if (beans && beans.checked) base.push('Beans');
+  var baseStr = base.length ? base.join(' + ') + ' | ' : 'No base | ';
+  var notesStr = notes && notes.value.trim() ? ' | Note: ' + notes.value.trim() : '';
+  var desc = baseStr + 'Proteins: ' + pratoState.meats.join(', ') + ' | Sides: ' + pratoState.sides.join(', ') + notesStr;
   var price = parseFloat(pratoData.price || 17);
   add('Prato do Dia', price, desc);
-  // Reset
   pratoState = { meats: [], sides: [] };
   loadDailySpecial();
 }
