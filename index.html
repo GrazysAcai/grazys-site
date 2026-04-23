@@ -233,7 +233,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--brown);
   <div class="nav-scroll">
     <button class="nav-pill active" onclick="goSec('acai',this)">🫐 Açaí</button>
     <button class="nav-pill" onclick="goSec('bottles',this)">🥤 Smoothie Collection</button>
-    <button class="nav-pill" onclick="goSec('prato',this);loadDailySpecial()">🍽️ Especial do Dia</button>
+    <button class="nav-pill" id="pratoPill" onclick="goSec('prato',this);loadDailySpecial()">🍽️ Daily Special</button>
     <button class="nav-pill" onclick="goSec('burgers',this)">🍔 Burgers</button>
     <button class="nav-pill" onclick="goSec('hotdogs',this)">🌭 Hot Dogs Dock</button>
     <button class="nav-pill" onclick="goSec('prensados',this)">🥪 Prensados</button>
@@ -1139,7 +1139,6 @@ async function loadDailySpecial() {
     meats.forEach(function(meat) {
       var emoji = meatEmojis[meat] || '&#127831;';
       html += '<div class="prato-item" data-item="' + meat + '" data-type="meat">';
-      html += '<div class="prato-item-emoji">' + emoji + '</div>';
       html += '<div class="prato-item-name">' + meat + '</div>';
       html += '</div>';
     });
@@ -1152,7 +1151,6 @@ async function loadDailySpecial() {
     sides.forEach(function(side) {
       var emoji = sideEmojis[side] || '&#127803;';
       html += '<div class="prato-item" data-item="' + side + '" data-type="side">';
-      html += '<div class="prato-item-emoji">' + emoji + '</div>';
       html += '<div class="prato-item-name">' + side + '</div>';
       html += '</div>';
     });
@@ -1165,7 +1163,6 @@ async function loadDailySpecial() {
       html += '<div class="prato-grid">';
       extraItems.forEach(function(item) {
         html += '<div class="prato-item" data-item="' + item + '" data-type="meat">';
-        html += '<div class="prato-item-emoji">&#11088;</div>';
         html += '<div class="prato-item-name">' + item + '</div>';
         html += '</div>';
       });
@@ -1293,7 +1290,8 @@ window.addEventListener('scroll',function(){
 
 // Load dynamic menu on page load
 window.addEventListener('load',function(){
-  setTimeout(loadDynamicMenus,500);
+  setTimeout(loadDynamicMenus, 500);
+  setTimeout(loadDailySpecial, 800);
 });
 
 updBuilder();
