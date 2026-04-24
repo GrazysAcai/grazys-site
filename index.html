@@ -892,16 +892,17 @@ function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updBar();ren
 function setType(t){orderType=t;document.getElementById('btnDel').classList.toggle('sel',t==='delivery');document.getElementById('btnPick').classList.toggle('sel',t==='pickup');document.getElementById('addrWrap').style.display=t==='delivery'?'block':'none';updBar();renderCart();}
 function setPayM(m){
   payMethod=m;
-  ['pCard','pCash','pVenmo','pZelle'].forEach(function(id){document.getElementById(id).classList.remove('sel');});
+  ['pCard','pCash','pVenmo','pZelle'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('sel');});
   var idMap={card:'pCard',cash:'pCash',venmo:'pVenmo',zelle:'pZelle'};
-  document.getElementById(idMap[m]).classList.add('sel');
-  document.getElementById('cardWrap').style.display=m==='card'?'block':'none';
-  document.getElementById('infoCash').style.display=m==='cash'?'block':'none';
-  document.getElementById('infoVenmo').style.display=m==='venmo'?'block':'none';
-  document.getElementById('infoZelle').style.display=m==='zelle'?'block':'none';
+  var selEl=document.getElementById(idMap[m]);if(selEl)selEl.classList.add('sel');
+  var cw=document.getElementById('cardWrap');if(cw)cw.style.display=m==='card'?'block':'none';
+  var ic=document.getElementById('infoCash');if(ic)ic.style.display=m==='cash'?'block':'none';
+  var iv=document.getElementById('infoVenmo');if(iv)iv.style.display=m==='venmo'?'block':'none';
+  var iz=document.getElementById('infoZelle');if(iz)iz.style.display=m==='zelle'?'block':'none';
   var btnTxt={card:'&#128179; Pay with Card',cash:'&#128181; Confirm Order (Cash)',venmo:'&#128153; Confirm Order (Venmo)',zelle:'&#128156; Confirm Order (Zelle)'};
-  var notesTxt={card:'🔒 Powered by Stripe · 0% commission',cash:'&#128181; Pay cash on delivery or at counter',venmo:'&#128153; Send to @grazysacai on Venmo — use order # as note',zelle:'&#128156; Send to (203) 726-4127 on Zelle — use order # as note'};
-  document.getElementById('payBtnTxt').textContent=btnTxt[m];document.getElementById('payNote').textContent=notesTxt[m];
+  var notesTxt={card:'Powered by Stripe',cash:'Pay cash on delivery or at counter',venmo:'Send to @grazysacai on Venmo — use order # as note',zelle:'Send to (203) 726-4127 on Zelle — use order # as note'};
+  var pbt=document.getElementById('payBtnTxt');if(pbt)pbt.textContent=btnTxt[m];
+  var pn=document.getElementById('payNote');if(pn)pn.textContent=notesTxt[m];
 }
 function initStripe(){if(stripeReady||typeof Stripe==='undefined')return;try{stripe=Stripe(STRIPE_PK);var els=stripe.elements();cardEl=els.create('card',{style:{base:{fontFamily:'Nunito,sans-serif',fontSize:'15px',color:'#5c2a0e','::placeholder':{color:'#c0a090'}},invalid:{color:'#c2185b'}}});cardEl.mount('#card-element');cardEl.on('change',function(e){document.getElementById('card-errors').textContent=e.error?e.error.message:'';});stripeReady=true;}catch(e){console.warn(e);}}
 async function checkout(){
