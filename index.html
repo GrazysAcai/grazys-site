@@ -930,6 +930,18 @@ async function checkout(){
 function closeReceipt(){
   var rm = document.getElementById('receiptModal');
   if (rm) rm.style.display = 'none';
+  // Reset everything for next order
+  cart = [];
+  payMethod = 'card';
+  stripeReady = false;
+  stripe = null;
+  cardEl = null;
+  appliedPromo = null;
+  appliedInfluencerCode = null;
+  promoDiscount = 0;
+  updBar();
+  // Re-init Stripe for next order
+  setTimeout(initStripe, 300);
 }
 
 async function showSuccess(orderId, phone, payMethod, amount) {
