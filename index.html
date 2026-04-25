@@ -854,9 +854,15 @@ function updBar(){var c=cart.reduce(function(s,i){return s+i.qty;},0);document.g
 function updZone(){var sel=document.getElementById('zoneSelect'),opt=sel.options[sel.selectedIndex];zone=sel.value?{fee:parseFloat(opt.getAttribute('data-fee')),free:parseFloat(opt.getAttribute('data-free'))}:null;renderCart();updBar();}
 function openCart(){
   renderCart();
-  document.getElementById('overlay').classList.add('open');
-  document.getElementById('overlay').onclick=function(e){if(e.target.id==='overlay')closeCart();};
-  setTimeout(initStripe,100);
+  var ov = document.getElementById('overlay');
+  if (!ov) return;
+  ov.classList.add('open');
+  ov.onclick=function(e){if(e.target.id==='overlay')closeCart();};
+  // Always try to init Stripe when cart opens
+  stripeReady = false;
+  stripe = null;
+  cardEl = null;
+  setTimeout(initStripe, 100);
   // For table/QR orders: hide delivery, show only dine in
   if(tableNumber){
     document.getElementById('btnDel').style.display='none';
@@ -904,29 +910,27 @@ function setPayM(m){
   var pbt=document.getElementById('payBtnTxt');if(pbt)pbt.textContent=btnTxt[m];
   var pn=document.getElementById('payNote');if(pn)pn.textContent=notesTxt[m];
 }
-function initStripe(){if(stripeReady||typeof Stripe==='undefined')return;try{stripe=Stripe(STRIPE_PK);var els=stripe.elements();cardEl=els.create('card',{style:{base:{fontFamily:'Nunito,sans-serif',fontSize:'15px',color:'#5c2a0e','::placeholder':{color:'#c0a090'}},invalid:{color:'#c2185b'}}});cardEl.mount('#card-element');cardEl.on('change',function(e){document.getElementById('card-errors').textContent=e.error?e.error.message:'';});stripeReady=true;}catch(e){console.warn(e);}}
-async function checkout(){
-  var name=document.getElementById('fname').value.trim(),phone=document.getElementById('fphone').value.trim(),addr=document.getElementById('faddr').value.trim(),notes=document.getElementById('fnotes').value.trim();
-  if(!name||!phone){alert('Please enter your name and phone number.');return;}
-  if(orderType==='delivery'&&!addr){alert('Please enter your delivery address.');return;}
-  if(orderType==='delivery'&&!zone){alert('Please select your city.');return;}
-  if(!cart.length){alert('Your cart is empty!');return;}
-  var btn=document.getElementById('payBtn');btn.disabled=true;btn.innerHTML='⏳ Processing…';
-  var oid='GRZ-'+Math.random().toString(36).substr(2,6).toUpperCase();
-  if(payMethod!=='card'){
-    try{await fetch(BACKEND+'/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentMethodId:null,amountCents:Math.round(getTotal()*100),customerName:name,customerPhone:phone,address:orderType==='delivery'?addr:'PICKUP',notes:notes+' | PAY: '+payMethod.toUpperCase(),orderType:orderType,zone:document.getElementById('zoneSelect').value||null,items:cart.map(function(i){return{name:i.name,price:i.price,qty:i.qty};}),paymentType:payMethod})});}catch(e){}
-    var amt=getTotal();cart=[];updBar();showSuccess(oid,phone,payMethod,amt);btn.disabled=false;return;
-  }
-  if(!stripeReady){alert('Card payment not ready. Check Stripe key.');btn.disabled=false;return;}
-  var res=await stripe.createPaymentMethod({type:'card',card:cardEl,billing_details:{name:name}});
-  if(res.error){document.getElementById('card-errors').textContent=res.error.message;btn.disabled=false;btn.innerHTML='&#128179; Pay with Card · $'+getTotal().toFixed(2);return;}
+function initStripe(){
+  if(typeof Stripe==='undefined') return;
   try{
-    var r=await fetch(BACKEND+'/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentMethodId:res.paymentMethod.id,amountCents:Math.round(getTotal()*100),customerName:name,customerPhone:phone,address:orderType==='delivery'?addr:'PICKUP',notes:notes,orderType:orderType,zone:document.getElementById('zoneSelect').value||null,items:cart.map(function(i){return{name:i.name,price:i.price,qty:i.qty};}),paymentType:'card'})});
-    var result=await r.json();
-    if(result.success){var amt2=getTotal();cart=[];updBar();showSuccess(result.orderId,phone,'card',amt2);}
-    else{document.getElementById('card-errors').textContent=result.error||'Payment failed.';btn.disabled=false;btn.innerHTML='&#128179; Pay · $'+getTotal().toFixed(2);}
-  }catch(e){document.getElementById('card-errors').textContent='Connection error.';btn.disabled=false;btn.innerHTML='&#128179; Pay · $'+getTotal().toFixed(2);}
+    // Clear any existing card element
+    var container = document.getElementById('card-element');
+    if(container) container.innerHTML = '';
+    
+    if(!stripe) stripe = Stripe(STRIPE_PK);
+    var els = stripe.elements();
+    cardEl = els.create('card',{style:{base:{fontFamily:'Nunito,sans-serif',fontSize:'15px',color:'#5c2a0e','::placeholder':{color:'#c0a090'}},invalid:{color:'#c2185b'}}});
+    cardEl.mount('#card-element');
+    cardEl.on('change',function(e){
+      var errEl = document.getElementById('card-errors');
+      if(errEl) errEl.textContent = e.error ? e.error.message : '';
+    });
+    stripeReady = true;
+    var btn = document.getElementById('payBtn');
+    if(btn) btn.innerHTML = '&#128179; Pay with Card · $' + getTotal().toFixed(2);
+  } catch(e){ console.warn('Stripe init error:', e); }
 }
+
 function closeReceipt(){
   var rm = document.getElementById('receiptModal');
   if (rm) rm.style.display = 'none';
@@ -940,8 +944,6 @@ function closeReceipt(){
   appliedInfluencerCode = null;
   promoDiscount = 0;
   updBar();
-  // Re-init Stripe for next order
-  setTimeout(initStripe, 300);
 }
 
 async function showSuccess(orderId, phone, payMethod, amount) {
